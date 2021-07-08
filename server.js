@@ -16,10 +16,14 @@ app.use(function (req, res, next) {
 const membershipsRoute = require('./routes/memberships')
 const accountRoute = require('./routes/account')
 const companyRoute = require('./routes/company')
+const profile = require('./routes/profile')
+
 
 app.use(membershipsRoute)
 app.use(accountRoute)
 app.use(companyRoute)
+app.use(profile)
+
 
 var server = app.listen(port, function () {
     console.log('Server running on port:', port)
