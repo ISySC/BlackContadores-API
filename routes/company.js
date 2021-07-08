@@ -10,8 +10,10 @@ var sqlConnect = require('../dbase/dbConfig')
 router.use(bodyParser.urlencoded({ extended: false }))
 router.use(bodyParser.json())
 
+var securityRoute = require('./securityRoutes')
+
 //recuperar cuentas de la empresa
-router.post('/api/company/bankaccounts', (request, response) => {
+router.post('/api/company/bankaccounts', securityRoute, (request, response) => {
     let companyTransID = request.body.companyTransID
 
     mssql.connect(sqlConnect.dbconnection()).then(() => {
@@ -30,7 +32,7 @@ router.post('/api/company/bankaccounts', (request, response) => {
 })
 
 //agregar registro diario
-router.post('/api/company/addregistry', (request, response) => {
+router.post('/api/company/addregistry', securityRoute, (request, response) => {
     let empresaTransID = request.body.empresaTransID
     let descripcion = request.body.descripcion
     let fechaRegistro = request.body.fechaRegistro
@@ -64,7 +66,7 @@ router.post('/api/company/addregistry', (request, response) => {
 })
 
 // recuperar los registros diarios de una empresa
-router.post('/api/company/registries', (request, response) => {
+router.post('/api/company/registries', securityRoute, (request, response) => {
     let empresaTransID = request.body.empresaTransID
     let fechaRegistro = request.body.fechaRegistro
 
@@ -88,7 +90,7 @@ router.post('/api/company/registries', (request, response) => {
 })
 
 //recuperar las clasificaciones
-router.get('/api/company/clasifications', (request, response) => {
+router.get('/api/company/clasifications', securityRoute, (request, response) => {
     mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
             .execute("Usp_API_ClasificacionesRecuperar")
@@ -104,7 +106,7 @@ router.get('/api/company/clasifications', (request, response) => {
 })
 
 //recuperar un registro diario por folio
-router.get('/api/company/registry/:folioID', (request, response) => {
+router.get('/api/company/registry/:folioID', securityRoute, (request, response) => {
     let folioID = request.params.folioID
 
     mssql.connect(sqlConnect.dbconnection()).then(() => {

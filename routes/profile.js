@@ -2,26 +2,26 @@
 
 var express = require('express')
 var bodyParser = require('body-parser')
+var securityRoute = require('./securityRoutes')
 
 var router = express.Router()
 
 var mssql = require('mssql')
 var sqlConnect = require('../dbase/dbConfig')
-const { response } = require('express')
 
 router.use(bodyParser.urlencoded({ extended: false }))
 router.use(bodyParser.json())
 
 //recupera la información del perfil de usuario 
-router.get('/api/profile', (request, response) => {
+router.get('/api/profile', securityRoute, (request, response) => {
     let companyTransID = request.body.EmpresaTransID
-    
+
     mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
             .input('EmpresaTransID', companyTransID)
             .execute("Usp_API_PerfilUsuarioRecuperar")
     }).then(result => {
-        
+
         if (result.recordsets[1][0].success) {
             response.status(200).json({
                 response: result.recordsets[0]
@@ -33,9 +33,9 @@ router.get('/api/profile', (request, response) => {
 })
 
 //actualizar información del perfil de usuario
-router.put('/api/profile/:EmpresaTransID', (request, response) => {
+router.put('/api/profile/:EmpresaTransID', securityRoute, (request, response) => {
     let companyTransID = request.params.EmpresaTransID
-    
+
     let legalName = request.body.RepresentanteLegal
     let companyName = request.body.NombreEmpresa
     let password = request.body.Contrasena
@@ -44,8 +44,6 @@ router.put('/api/profile/:EmpresaTransID', (request, response) => {
     let activityID = request.body.ActividadID
     let otroGiro = request.body.OtroGiroEmpresa
     let emailUser = request.body.CorreoUsuario
-
-    console.log(companyName)
 
     mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
@@ -62,7 +60,7 @@ router.put('/api/profile/:EmpresaTransID', (request, response) => {
     }).then(result => {
         console.log(result)
         if (result.recordsets[0][0].success) {
-            
+
             response.status(200).json({
                 response: result.recordsets[0]
             })

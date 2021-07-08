@@ -9,12 +9,11 @@ app.set('key', config.key);
 
 let token = '';
 
-function createToken(username, password, legalNamePerson){
+function createToken(username, password){
     const payload = {
         ckeck: true,
         username,
-        password,
-        legalNamePerson
+        password
     }
 
     token = jwt.sign(payload, app.get('key'));
@@ -24,4 +23,19 @@ function createToken(username, password, legalNamePerson){
     }
 }
 
-module.exports = {createToken}
+function validateUserToken(accessToken){
+    let isTokenUserValid = false;
+
+    jwt.verify(accessToken, app.get('key'), (error, decoded) =>{
+        
+        if(error)
+           isTokenUserValid = false;
+        else{
+            isTokenUserValid = true;
+        }
+    })
+    
+    return isTokenUserValid
+}
+
+module.exports = {createToken, validateUserToken}
