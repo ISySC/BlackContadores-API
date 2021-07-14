@@ -31,6 +31,72 @@ router.post('/api/company/bankaccounts', securityRoute, (request, response) => {
     })
 })
 
+//agrega una cuentas de la empresa
+router.post('/api/company/bankaccounts/addbankaccount', securityRoute, (request, response) => {
+    let companyTransID = request.body.empresaTransID
+    let descriptionBankAccount = request.body.descripcionCuenta
+    let username = request.body.correoUsuario
+
+    mssql.connect(sqlConnect.dbconnection()).then(() => {
+        return new mssql.Request()
+            .input('EmpresaTransID', companyTransID)
+            .input('DescripcionCuenta', descriptionBankAccount)
+            .input('CorreoElectronico', username)
+            .execute("Usp_API_CuentaBancoEmpresaAgregar")
+    }).then(result => {
+        if (result.recordsets[0][0].success) {
+            response.status(200).json({
+                response: result.recordsets[0]
+            })
+        }
+    }).catch(error => {
+        response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
+    })
+})
+
+//modificar una cuenta de la empresa
+router.put('/api/company/bankaccounts/:CuentaID', securityRoute, (request, response) => {
+    let accountID = request.params.CuentaID
+
+    let descriptionBankAccount = request.body.descripcionCuenta
+    let username = request.body.correoUsuario
+
+    mssql.connect(sqlConnect.dbconnection()).then(() => {
+        return new mssql.Request()
+            .input('CuentaID', accountID)
+            .input('DescripcionCuenta', descriptionBankAccount)
+            .input('CorreoElectronico', username)
+            .execute("Usp_API_CuentaBancoEmpresaEditar")
+    }).then(result => {
+        if (result.recordsets[0][0].success) {
+            response.status(200).json({
+                response: result.recordsets[0]
+            })
+        }
+    }).catch(error => {
+        response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
+    })
+})
+
+//recuperar las clasificaciones
+router.get('/api/company/bankaccount', securityRoute, (request, response) => {
+    let bankaccount = request.body.cuentaID
+
+    mssql.connect(sqlConnect.dbconnection()).then(() => {
+        return new mssql.Request()
+            .input('CuentaID', bankaccount)
+            .execute("Usp_API_CuentaEmpresaRecuperar")
+    }).then(result => {
+        if (result.recordsets[0][0].success) {
+            response.status(200).json({
+                response: result.recordsets[0]
+            })
+        }
+    }).catch(error => {
+        response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
+    })
+})
+
 //agregar registro diario
 router.post('/api/company/addregistry', securityRoute, (request, response) => {
     let empresaTransID = request.body.empresaTransID
@@ -53,6 +119,40 @@ router.post('/api/company/addregistry', securityRoute, (request, response) => {
             .input('Observaciones', observaciones)
             .input('Importe', importe)
             .execute("Usp_API_RegistroDiarioAgregar")
+    }).then(result => {
+        if (result.recordset[0].success) {
+            response.status(200).json({
+                response: result.recordset
+            })
+        }
+
+    }).catch(error => {
+        response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
+    })
+})
+
+//actualiza registro diario
+router.put('/api/company/updateregistry', securityRoute, (request, response) => {
+    let folioID = request.body.folioID
+    let descripcion = request.body.descripcion
+    let fechaRegistro = request.body.fechaRegistro
+    let referencia = request.body.referencia
+    let clasificacionID = request.body.clasificacionID
+    let cuentaID = request.body.cuentaID
+    let observaciones = request.body.observaciones
+    let importe = request.body.importe
+
+    mssql.connect(sqlConnect.dbconnection()).then(() => {
+        return new mssql.Request()
+            .input('FolioID', folioID)
+            .input('Descripcion', descripcion)
+            .input('FechaRegistro', fechaRegistro)
+            .input('Referencia', referencia)
+            .input('ClasificacionID', clasificacionID)
+            .input('CuentaID', cuentaID)
+            .input('Observaciones', observaciones)
+            .input('Importe', importe)
+            .execute("Usp_API_RegistroDiarioEditar")
     }).then(result => {
         if (result.recordset[0].success) {
             response.status(200).json({
@@ -123,7 +223,6 @@ router.get('/api/company/registry/:folioID', securityRoute, (request, response) 
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
     })
 })
-
 
 module.exports = router
 
