@@ -13,7 +13,7 @@ router.use(bodyParser.urlencoded({ extended: false }))
 router.use(bodyParser.json())
 
 //recupera la información de los usuarios (correos) de la empresa
-router.get('/api/users', (request, response) => {
+router.get('/api/users', securityRoute, (request, response) => {
     let companyTransID = request.body.EmpresaTransID
 
     mssql.connect(sqlConnect.dbconnection()).then(() => {
@@ -33,7 +33,7 @@ router.get('/api/users', (request, response) => {
 })
 
 //recupera la información de los usuarios (correos) de la empresa
-router.get('/api/users/user/:UsuarioID', (request, response) => {
+router.get('/api/users/user/:UsuarioID', securityRoute, (request, response) => {
     let userID = request.params.UsuarioID
 
     mssql.connect(sqlConnect.dbconnection()).then(() => {
@@ -53,7 +53,7 @@ router.get('/api/users/user/:UsuarioID', (request, response) => {
 })
 
 //agrega un usuario a la empresa desde el menu de usuarios
-router.post('/api/users/user/add', (request, response) => {
+router.post('/api/users/user/add', securityRoute, (request, response) => {
     let companyTransID = request.body.EmpresaTransID
     let username = request.body.NombreUsuario
     let email = request.body.CorreoUsuario
@@ -79,7 +79,7 @@ router.post('/api/users/user/add', (request, response) => {
 })
 
 //modifica la información del usuario de correo
-router.put('/api/users/user/:UsuarioID', (request, response) => {
+router.put('/api/users/user/:UsuarioID', securityRoute, (request, response) => {
     let userID = request.params.UsuarioID
 
     let username = request.body.NombreUsuario
