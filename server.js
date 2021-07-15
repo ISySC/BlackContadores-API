@@ -17,12 +17,13 @@ const membershipsRoute = require('./routes/memberships')
 const accountRoute = require('./routes/account')
 const companyRoute = require('./routes/company')
 const profile = require('./routes/profile')
-
+const user = require('./routes/user')
 
 app.use(membershipsRoute)
 app.use(accountRoute)
 app.use(companyRoute)
 app.use(profile)
+app.use(user)
 
 
 var server = app.listen(port, function () {
