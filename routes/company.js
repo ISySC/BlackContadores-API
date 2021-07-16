@@ -166,9 +166,9 @@ router.put('/api/company/updateregistry', securityRoute, (request, response) => 
 })
 
 // recuperar los registros diarios de una empresa
-router.post('/api/company/registries', securityRoute, (request, response) => {
-    let empresaTransID = request.body.empresaTransID
-    let fechaRegistro = request.body.fechaRegistro
+router.post('/api/company/registries',  (request, response) => {
+    let empresaTransID = request.body.EmpresaTransID
+    let fechaRegistro = request.body.FechaRegistro
 
     mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
@@ -223,6 +223,38 @@ router.get('/api/company/registry/:folioID', securityRoute, (request, response) 
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
     })
 })
+
+//recuperar un registro diario por folio
+router.get('/api/company/registries/:EmpresaTransID',  (request, response) => {
+    let companyTransID = request.params.EmpresaTransID
+    
+    let initDay = request.body.FechaInicio
+    let finalDay = request.body.FechaFin
+    let clasificationID = request.body.ClasificacionID
+
+    mssql.connect(sqlConnect.dbconnection()).then(() => {
+        return new mssql.Request()
+            .input("EmpresaTransID", companyTransID)
+            .input("ClasificacionID", clasificationID)
+            .input("FechaInicio", initDay)
+            .input("FechaFin", finalDay)
+            .execute("Usp_API_RegistrosDiarioPorParametrosEmpresaRecuperar")
+    }).then(result => {
+          if (result.recordsets[2][0].success) {
+            
+            response.status(200).json({
+                success:  result.recordsets[2][0].success,
+                message: result.recordsets[2][0].message,
+                totalAccount: result.recordsets[1][0],
+                response: result.recordsets[0]
+            })
+        }
+    }).catch(error => {
+        response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + error)
+    })
+})
+
+
 
 module.exports = router
 
