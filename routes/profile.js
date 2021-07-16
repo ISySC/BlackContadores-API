@@ -42,7 +42,7 @@ router.put('/api/profile/:EmpresaTransID', securityRoute, (request, response) =>
     let giroID = request.body.GiroID
     let subgiroID = request.body.SubGiroID
     let activityID = request.body.ActividadID
-    let otroGiro = request.body.OtroGiroEmpresa
+    let otroGiro = 0//request.body.OtroGiroEmpresa
     let emailUser = request.body.CorreoUsuario
 
     mssql.connect(sqlConnect.dbconnection()).then(() => {

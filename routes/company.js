@@ -166,7 +166,7 @@ router.put('/api/company/updateregistry', securityRoute, (request, response) => 
 })
 
 // recuperar los registros diarios de una empresa
-router.post('/api/company/registries',  (request, response) => {
+router.post('/api/company/registries', securityRoute, (request, response) => {
     let empresaTransID = request.body.EmpresaTransID
     let fechaRegistro = request.body.FechaRegistro
 
