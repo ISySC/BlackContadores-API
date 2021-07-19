@@ -165,6 +165,26 @@ router.put('/api/company/updateregistry', securityRoute, (request, response) => 
     })
 })
 
+//actualiza registro diario
+router.put('/api/company/deleteregistry', securityRoute, (request, response) => {
+    let folioID = request.body.folioID
+
+    mssql.connect(sqlConnect.dbconnection()).then(() => {
+        return new mssql.Request()
+            .input('FolioID', folioID)
+            .execute("Usp_API_RegistroDiarioEliminar")
+    }).then(result => {
+        if (result.recordset[0].success) {
+            response.status(200).json({
+                response: result.recordset
+            })
+        }
+
+    }).catch(error => {
+        response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
+    })
+})
+
 // recuperar los registros diarios de una empresa
 router.post('/api/company/registries', securityRoute, (request, response) => {
     let empresaTransID = request.body.EmpresaTransID
