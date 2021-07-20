@@ -13,16 +13,16 @@ router.use(bodyParser.urlencoded({ extended: false }))
 router.use(bodyParser.json())
 
 //recupera la información del perfil de usuario 
-router.get('/api/profile', securityRoute, (request, response) => {
-    let companyTransID = request.body.EmpresaTransID
+router.get('/api/profile/:EmpresaTransID', securityRoute, (request, response) => {
+    let companyTransID = request.params.EmpresaTransID
 
     mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
             .input('EmpresaTransID', companyTransID)
             .execute("Usp_API_PerfilUsuarioRecuperar")
     }).then(result => {
-
-        if (result.recordsets[1][0].success) {
+        console.log(result)
+        if (result.recordsets[5][0].success) {
             response.status(200).json({
                 response: result.recordsets[0]
             })
