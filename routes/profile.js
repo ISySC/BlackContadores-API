@@ -21,10 +21,16 @@ router.get('/api/profile/:EmpresaTransID', securityRoute, (request, response) =>
             .input('EmpresaTransID', companyTransID)
             .execute("Usp_API_PerfilUsuarioRecuperar")
     }).then(result => {
-        console.log(result)
         if (result.recordsets[5][0].success) {
             response.status(200).json({
-                response: result.recordsets[0]
+                message: result.recordsets[5][0].message,
+                success: result.recordsets[5][0].success,
+                response: {
+                           'perfil': result.recordsets[0],
+                           'membresias': result.recordsets[1],
+                           'giros': result.recordsets[2],
+                           'subgiros': result.recordsets[3]
+                }
             })
         }
     }).catch(error => {
