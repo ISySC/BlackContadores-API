@@ -26,10 +26,11 @@ router.get('/api/profile/:EmpresaTransID', securityRoute, (request, response) =>
                 message: result.recordsets[5][0].message,
                 success: result.recordsets[5][0].success,
                 response: {
-                           'perfil': result.recordsets[0],
-                           'membresias': result.recordsets[1],
-                           'giros': result.recordsets[2],
-                           'subgiros': result.recordsets[3]
+                    'perfil': result.recordsets[0],
+                    'membresias': result.recordsets[1],
+                    'giros': result.recordsets[2],
+                    'subgiros': result.recordsets[3],
+                    'actividades': result.recordsets[4]
                 }
             })
         }
