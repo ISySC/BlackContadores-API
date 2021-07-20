@@ -245,7 +245,7 @@ router.get('/api/company/registry/:folioID', securityRoute, (request, response) 
 })
 
 //recuperar un registro diario por folio
-router.get('/api/company/registries/:EmpresaTransID', securityRoute, (request, response) => {
+router.post('/api/company/registries/:EmpresaTransID', securityRoute, (request, response) => {
     let companyTransID = request.params.EmpresaTransID
     
     let initDay = request.body.FechaInicio
