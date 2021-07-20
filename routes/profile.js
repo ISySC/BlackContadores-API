@@ -3,6 +3,7 @@
 var express = require('express')
 var bodyParser = require('body-parser')
 var securityRoute = require('./securityRoutes')
+var bcrypt = require('bcrypt')
 
 var router = express.Router()
 
@@ -45,12 +46,17 @@ router.put('/api/profile/:EmpresaTransID', securityRoute, (request, response) =>
 
     let legalName = request.body.RepresentanteLegal
     let companyName = request.body.NombreEmpresa
-    let password = request.body.Contrasena
+    //let password = request.body.Contrasena
     let giroID = request.body.GiroID
     let subgiroID = request.body.SubGiroID
     let activityID = request.body.ActividadID
     let otroGiro = 0//request.body.OtroGiroEmpresa
     let emailUser = request.body.CorreoUsuario
+
+    //Encriptacion de la contraseña
+    const saltRounds = 10;
+    var salt = bcrypt.genSaltSync(saltRounds);
+    var password = bcrypt.hashSync(request.body.Contrasena, salt);
 
     mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()

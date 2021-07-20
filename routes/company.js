@@ -252,6 +252,8 @@ router.get('/api/company/registries/:EmpresaTransID', securityRoute, (request, r
     let finalDay = request.body.FechaFin
     let clasificationID = request.body.ClasificacionID
 
+    console.log(request.body)
+
     mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
             .input("EmpresaTransID", companyTransID)
