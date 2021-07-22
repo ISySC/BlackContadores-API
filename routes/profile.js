@@ -17,9 +17,12 @@ router.use(bodyParser.json())
 router.get('/api/profile/:EmpresaTransID', securityRoute, (request, response) => {
     let companyTransID = request.params.EmpresaTransID
 
+    let usuarioID = request.body.UsuarioID
+
     mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
             .input('EmpresaTransID', companyTransID)
+            .input('UsuarioID', usuarioID)
             .execute("Usp_API_PerfilUsuarioRecuperar")
     }).then(result => {
         if (result.recordsets[5][0].success) {
