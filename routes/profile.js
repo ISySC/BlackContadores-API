@@ -14,7 +14,7 @@ router.use(bodyParser.urlencoded({ extended: false }))
 router.use(bodyParser.json())
 
 //recupera la información del perfil de usuario 
-router.get('/api/profile/:EmpresaTransID', securityRoute, (request, response) => {
+router.post('/api/profile/:EmpresaTransID', securityRoute, (request, response) => {
     let companyTransID = request.params.EmpresaTransID
 
     let usuarioID = request.body.UsuarioID
