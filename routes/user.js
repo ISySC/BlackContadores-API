@@ -3,6 +3,7 @@
 var express = require('express')
 var bodyParser = require('body-parser')
 var securityRoute = require('./securityRoutes')
+var bcrypt = require('bcrypt')
 
 var router = express.Router()
 
@@ -57,7 +58,11 @@ router.post('/api/users/user/add', securityRoute, (request, response) => {
     let companyTransID = request.body.EmpresaTransID
     let username = request.body.NombreUsuario
     let email = request.body.CorreoUsuario
-    let password = request.body.Contrasena
+
+    //Encriptacion de la contraseña
+    const saltRounds = 10;
+    var salt = bcrypt.genSaltSync(saltRounds);
+    var password = bcrypt.hashSync(request.body.Contrasena, salt);
 
     mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
@@ -83,8 +88,12 @@ router.put('/api/users/user/:UsuarioID', securityRoute, (request, response) => {
     let userID = request.params.UsuarioID
 
     let username = request.body.NombreUsuario
-    let password = request.body.Contrasena
     let isActived = request.body.EsActivo
+
+    //Encriptacion de la contraseña
+    const saltRounds = 10;
+    var salt = bcrypt.genSaltSync(saltRounds);
+    var password = bcrypt.hashSync(request.body.Contrasena, salt);
 
     mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()

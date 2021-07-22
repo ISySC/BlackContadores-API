@@ -276,8 +276,6 @@ router.post('/api/company/registries/:EmpresaTransID', securityRoute, (request, 
     })
 })
 
-
-
 module.exports = router
 
 

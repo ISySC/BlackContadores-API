@@ -14,6 +14,7 @@ const securityRoute = require('./securityRoutes')
 router.use(bodyParser.urlencoded({ extended: false }))
 router.use(bodyParser.json())
 
+//crear cuenta de usuario
 router.post('/api/user/createaccount', async (request, response) => {
     let legalNamePerson = request.body.legalNamePerson
     let companyName = request.body.companyName
@@ -75,6 +76,7 @@ router.post('/api/user/createaccount', async (request, response) => {
 
 })
 
+//inicio de sesión de usuario
 router.post('/api/user/login', async (request, response) => {
     let username = request.body.CorreoUsuario;
 
@@ -126,6 +128,7 @@ router.post('/api/user/login', async (request, response) => {
     })
 })
 
+//eliminar token de usuario pare cerrar sesión
 router.delete('/api/user/logout/:Token', securityRoute, async (request, response) => {
 
     let token = request.params.Token;
@@ -145,8 +148,6 @@ router.delete('/api/user/logout/:Token', securityRoute, async (request, response
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + error)
     })
 })
-
-
 
 module.exports = router
 
