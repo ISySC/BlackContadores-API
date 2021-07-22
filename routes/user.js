@@ -13,8 +13,8 @@ router.use(bodyParser.urlencoded({ extended: false }))
 router.use(bodyParser.json())
 
 //recupera la información de los usuarios (correos) de la empresa
-router.get('/api/users', securityRoute, (request, response) => {
-    let companyTransID = request.body.EmpresaTransID
+router.get('/api/users/:EmpresaTransID', securityRoute, (request, response) => {
+    let companyTransID = request.params.EmpresaTransID
 
     mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
