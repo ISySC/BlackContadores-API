@@ -88,19 +88,22 @@ router.put('/api/company/bankaccounts/:CuentaID', securityRoute, (request, respo
 
 //recuperar la información de una cuenta
 router.get('/api/company/bankaccount/:CuentaID', securityRoute, (request, response) => {
-    let bankaccount = request.params.cuentaID
+    let bankaccount = request.params.CuentaID
 
     mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
             .input('CuentaID', bankaccount)
             .execute("Usp_API_CuentaEmpresaRecuperar")
     }).then(result => {
-
-        if (result.recordsets[1][0].success) {
+        console.log(result.recordsets[0][0].success)
+        if (result.recordsets[0][0].success) {
             response.status(200).json({
-                success: result.recordsets[1][0].success,
-                message: result.recordsets[1][0].message,
-                response: []
+                success: result.recordsets[0][0].success,
+                message: result.recordsets[0][0].message,
+                response: {
+                    'Descripcion' : result.recordsets[0][0].Descripcion,
+                    'EsActivo': result.recordsets[0][0].EsActivo
+                }
             })
         }
     }).catch(error => {
