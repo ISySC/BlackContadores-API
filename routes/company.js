@@ -95,9 +95,12 @@ router.get('/api/company/bankaccount/:CuentaID', securityRoute, (request, respon
             .input('CuentaID', bankaccount)
             .execute("Usp_API_CuentaEmpresaRecuperar")
     }).then(result => {
-        if (result.recordsets[0][0].success) {
+
+        if (result.recordsets[1][0].success) {
             response.status(200).json({
-                response: result.recordsets[0]
+                success: result.recordsets[1][0].success,
+                message: result.recordsets[1][0].message,
+                response: []
             })
         }
     }).catch(error => {
