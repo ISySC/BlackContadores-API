@@ -59,7 +59,7 @@ router.post('/api/user/createaccount', async (request, response) => {
             }
 
             response.status(200).json({
-                token: authToken.createToken(email, password),
+                token: authToken.createToken(email, hash),
                 response: result.recordset
             })
 
