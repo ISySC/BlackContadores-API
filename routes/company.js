@@ -48,7 +48,9 @@ router.post('/api/company/bankaccounts/addbankaccount', securityRoute, (request,
     }).then(result => {
         if (result.recordsets[0][0].success) {
             response.status(200).json({
-                response: result.recordsets[0]
+                success: result.recordsets[0][0].success,
+                message: result.recordsets[0][0].message,
+                response: []
             })
         }
     }).catch(error => {
@@ -74,7 +76,9 @@ router.put('/api/company/bankaccounts/:CuentaID', securityRoute, (request, respo
     }).then(result => {
         if (result.recordsets[0][0].success) {
             response.status(200).json({
-                response: result.recordsets[0]
+                success: result.recordsets[0][0].success,
+                message: result.recordsets[0][0].message,
+                response: []
             })
         }
     }).catch(error => {
