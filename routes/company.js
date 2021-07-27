@@ -36,12 +36,14 @@ router.post('/api/company/bankaccounts/addbankaccount', securityRoute, (request,
     let companyTransID = request.body.empresaTransID
     let descriptionBankAccount = request.body.descripcionCuenta
     let username = request.body.correoUsuario
+    let isActived = request.body.esActivo
 
     mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
             .input('EmpresaTransID', companyTransID)
             .input('DescripcionCuenta', descriptionBankAccount)
             .input('CorreoElectronico', username)
+            .input('EsActivo', isActived)
             .execute("Usp_API_CuentaBancoEmpresaAgregar")
     }).then(result => {
         if (result.recordsets[0][0].success) {
@@ -60,12 +62,14 @@ router.put('/api/company/bankaccounts/:CuentaID', securityRoute, (request, respo
 
     let descriptionBankAccount = request.body.descripcionCuenta
     let username = request.body.correoUsuario
+    let isActived = request.body.esActivo
 
     mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
             .input('CuentaID', accountID)
             .input('DescripcionCuenta', descriptionBankAccount)
             .input('CorreoElectronico', username)
+            .input('EsActivo', isActived)
             .execute("Usp_API_CuentaBancoEmpresaEditar")
     }).then(result => {
         if (result.recordsets[0][0].success) {
