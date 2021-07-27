@@ -14,11 +14,13 @@ var securityRoute = require('./securityRoutes')
 
 //recuperar cuentas de la empresa
 router.post('/api/company/bankaccounts', securityRoute, (request, response) => {
-    let companyTransID = request.body.companyTransID
+    let companyTransID = request.body.empresaTransID
+    let showInactived = request.body.mostrarInactivos
 
     mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
             .input('EmpresaTransID', companyTransID)
+            .input('MostrarInactivos', showInactived)
             .execute("Usp_API_CuentasEmpresaRecuperar")
     }).then(result => {
         if (result.recordsets[1][0].success) {
