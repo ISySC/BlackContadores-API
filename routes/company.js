@@ -86,9 +86,9 @@ router.put('/api/company/bankaccounts/:CuentaID', securityRoute, (request, respo
     })
 })
 
-//recuperar las clasificaciones
-router.get('/api/company/bankaccount', securityRoute, (request, response) => {
-    let bankaccount = request.body.cuentaID
+//recuperar la información de una cuenta
+router.get('/api/company/bankaccount/:CuentaID', securityRoute, (request, response) => {
+    let bankaccount = request.params.cuentaID
 
     mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
