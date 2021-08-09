@@ -292,6 +292,77 @@ router.post('/api/company/registries/:EmpresaTransID', securityRoute, (request, 
     })
 })
 
+//agrega una subcategoria de la empresa
+router.post('/api/company/subclasification', securityRoute, (request, response) => {
+    let companyTransID = request.body.EmpresaTransID
+    let clasificationID = request.body.ClasificacionID
+    let concept = request.body.Concepto
+
+    mssql.connect(sqlConnect.dbconnection()).then(() => {
+        return new mssql.Request()
+            .input("EmpresaTransID", companyTransID)
+            .input("ClasificacionID", clasificationID)
+            .input("Concepto", concept)
+            .execute("Usp_API_SubClasificacionAgregar")
+    }).then(result => {
+          if (result.recordsets[0][0].success) {
+            
+            response.status(200).json({
+                success:  result.recordsets[0][0].success,
+                message: result.recordsets[0][0].message,
+                response: null
+            })
+        }
+    }).catch(error => {
+        response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + error)
+    })
+})
+
+//agrega una subcategoria de la empresa
+router.put('/api/company/subclasification', securityRoute, (request, response) => {
+    let conceptID = request.body.ConceptoID
+    let concept = request.body.Concepto 
+
+    mssql.connect(sqlConnect.dbconnection()).then(() => {
+        return new mssql.Request()
+            .input("ConceptoID", conceptID)
+            .input("Concepto", concept)
+            .execute("Usp_API_SubClasificacionEditar")
+    }).then(result => {
+          if (result.recordsets[0][0].success) {
+            
+            response.status(200).json({
+                success:  result.recordsets[0][0].success,
+                message: result.recordsets[0][0].message,
+                response: null
+            })
+        }
+    }).catch(error => {
+        response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + error)
+    })
+})
+
+//recuperar las clasificaciones
+router.get('/api/company/subclasifications/:EmpresaTransID', securityRoute, (request, response) => {
+    let companyTransID = request.params.EmpresaTransID 
+
+    mssql.connect(sqlConnect.dbconnection()).then(() => {
+        return new mssql.Request()
+            .input("EmpresaTransID", companyTransID) 
+            .execute("Usp_API_SubClasificacionRecuperar")
+    }).then(result => {
+        if (result.recordsets[1][0].success) {
+            response.status(200).json({
+                success:  result.recordsets[1][0].success,
+                message: result.recordsets[1][0].message,
+                response: result.recordsets[0]
+            })
+        }
+    }).catch(error => {
+        response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
+    })
+})
+
 module.exports = router
 
 
