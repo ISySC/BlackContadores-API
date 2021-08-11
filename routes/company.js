@@ -318,15 +318,19 @@ router.post('/api/company/subclasification', securityRoute, (request, response) 
     })
 })
 
-//agrega una subcategoria de la empresa
+//editar una subcategoria de la empresa
 router.put('/api/company/subclasification', securityRoute, (request, response) => {
     let conceptID = request.body.ConceptoID
     let concept = request.body.Concepto 
+    let isActived = request.body.EsActivo
+    let clasificationID = request.body.ClasificacionID
 
     mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
             .input("ConceptoID", conceptID)
             .input("Concepto", concept)
+            .input("EsActivo", isActived)
+            .input("ClasificacionID", clasificationID)
             .execute("Usp_API_SubClasificacionEditar")
     }).then(result => {
           if (result.recordsets[0][0].success) {
