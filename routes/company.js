@@ -120,6 +120,7 @@ router.post('/api/company/addregistry', securityRoute, (request, response) => {
     let fechaRegistro = request.body.fechaRegistro
     let referencia = request.body.referencia
     let clasificacionID = request.body.clasificacionID
+    let subclasificacionID = request.body.subclasificacionID
     let cuentaID = request.body.cuentaID
     let observaciones = request.body.observaciones
     let importe = request.body.importe
@@ -131,6 +132,7 @@ router.post('/api/company/addregistry', securityRoute, (request, response) => {
             .input('FechaRegistro', fechaRegistro)
             .input('Referencia', referencia)
             .input('ClasificacionID', clasificacionID)
+            .input('SubClasificacionID', subclasificacionID)
             .input('CuentaID', cuentaID)
             .input('Observaciones', observaciones)
             .input('Importe', importe)
@@ -154,6 +156,7 @@ router.put('/api/company/updateregistry', securityRoute, (request, response) => 
     let fechaRegistro = request.body.fechaRegistro
     let referencia = request.body.referencia
     let clasificacionID = request.body.clasificacionID
+    let subclasificacionID = request.body.subclasificacionID
     let cuentaID = request.body.cuentaID
     let observaciones = request.body.observaciones
     let importe = request.body.importe
@@ -165,6 +168,7 @@ router.put('/api/company/updateregistry', securityRoute, (request, response) => 
             .input('FechaRegistro', fechaRegistro)
             .input('Referencia', referencia)
             .input('ClasificacionID', clasificacionID)
+            .input('SubClasificacionID', subclasificacionID)
             .input('CuentaID', cuentaID)
             .input('Observaciones', observaciones)
             .input('Importe', importe)
@@ -346,13 +350,15 @@ router.put('/api/company/subclasification', securityRoute, (request, response) =
     })
 })
 
-//recuperar las clasificaciones
-router.get('/api/company/subclasifications/:EmpresaTransID', securityRoute, (request, response) => {
-    let companyTransID = request.params.EmpresaTransID 
+//recuperar las subclasificaciones
+router.post('/api/company/subclasifications', securityRoute, (request, response) => {
+    let companyTransID = request.body.EmpresaTransID
+    let mostrarInactivos = request.body.mostrarInactivos
 
     mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
             .input("EmpresaTransID", companyTransID) 
+            .input("MostrarInactivos", mostrarInactivos) 
             .execute("Usp_API_SubClasificacionRecuperar")
     }).then(result => {
         if (result.recordsets[1][0].success) {

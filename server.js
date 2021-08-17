@@ -18,12 +18,14 @@ const accountRoute = require('./routes/account')
 const companyRoute = require('./routes/company')
 const profile = require('./routes/profile')
 const user = require('./routes/user')
+const payment = require('./routes/payment')
 
 app.use(membershipsRoute)
 app.use(accountRoute)
 app.use(companyRoute)
 app.use(profile)
 app.use(user)
+app.use(payment)
 
 
 var server = app.listen(port, function () {
