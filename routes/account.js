@@ -92,7 +92,7 @@ router.post('/api/user/login', async (request, response) => {
 
             if (bcrypt.compareSync(request.body.Contrasena, result.recordsets[0][0].Contrasena)) {
                 let accessToken = authToken.createToken(username, result.recordsets[0][0].Contrasena)
-
+                mssql.close()
                 //se agrega el token del usuario a la base de datos
                 mssql.connect(sqlConnect.dbconnection()).then(() => {
                     return new mssql.Request()
@@ -100,8 +100,8 @@ router.post('/api/user/login', async (request, response) => {
                         .input('CorreoUsuario', username)
                         .execute("Usp_API_UsuarioTokenAgregar")
                 }).then(resultToken => {
-                    mssql.close()
                     
+                    mssql.close()
                     if (resultToken.recordsets[0][0].success) {
                         //se envia la respuesta al cliente
                         response.status(200).json({
