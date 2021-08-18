@@ -53,6 +53,8 @@ router.post('/api/user/createaccount', async (request, response) => {
                         .input('CorreoUsuario', email)
                         .execute("Usp_API_UsuarioMembresiaPagoAgregar")
                 }).then(result1 => {
+                    mssql.close()
+
                     if (result1.recordset[0].success)
                         stmp.sendEmailMembership(result1.recordset[0].fechaVencimiento, result1.recordset[0].tipoPlan, result1.recordset[0].fechaActivacion, frecuency, "0.00", email, legalNamePerson)
                 })
@@ -69,8 +71,6 @@ router.post('/api/user/createaccount', async (request, response) => {
                 response: result.recordset[0]
             })
         }
-
-        mssql.close()
 
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
@@ -100,7 +100,8 @@ router.post('/api/user/login', async (request, response) => {
                         .input('CorreoUsuario', username)
                         .execute("Usp_API_UsuarioTokenAgregar")
                 }).then(resultToken => {
-
+                    mssql.close()
+                    
                     if (resultToken.recordsets[0][0].success) {
                         //se envia la respuesta al cliente
                         response.status(200).json({
@@ -125,7 +126,6 @@ router.post('/api/user/login', async (request, response) => {
 
         }
 
-        mssql.close()
     }).catch((err) => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + err)
     })
@@ -140,6 +140,8 @@ router.delete('/api/user/logout/:Token', securityRoute, async (request, response
             .input("Token", token)
             .execute("Usp_API_CerrarSesion")
     }).then(result => {
+        mssql.close()
+
         if (result.recordsets[0][0].success) {
             response.status(200).json({
                 success: result.recordsets[0][0].success,
@@ -148,7 +150,6 @@ router.delete('/api/user/logout/:Token', securityRoute, async (request, response
             })
         }
 
-        mssql.close()
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + error)
     })
