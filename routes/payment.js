@@ -4,10 +4,7 @@ var express = require('express')
 var router = express.Router()
 var bodyParser = require('body-parser')
 
-var mssql = require('mssql')
-var sqlConnect = require('../dbase/dbConfig')
 var conekta = require('conekta');
-const securityRoute = require('./securityRoutes')
 
 router.use(bodyParser.urlencoded({ extended: false }))
 router.use(bodyParser.json())

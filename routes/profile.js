@@ -37,12 +37,12 @@ router.post('/api/profile/:EmpresaTransID', securityRoute, (request, response) =
                     'actividades': result.recordsets[4]
                 }
             })
-        
-            mssql.close()
         }
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
     })
+
+    mssql.close()
 })
 
 //actualizar información del perfil de usuario
@@ -87,6 +87,7 @@ router.put('/api/profile/:EmpresaTransID', securityRoute, (request, response) =>
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
     })
 
+    mssql.close()
 
 })
 

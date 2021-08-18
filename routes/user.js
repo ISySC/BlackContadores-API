@@ -31,6 +31,8 @@ router.get('/api/users/:EmpresaTransID', securityRoute, (request, response) => {
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
     })
+    
+    mssql.close()
 })
 
 //recupera la información de los usuarios (correos) de la empresa
@@ -51,6 +53,8 @@ router.get('/api/users/user/:UsuarioID', securityRoute, (request, response) => {
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
     })
+
+    mssql.close()
 })
 
 //agrega un usuario a la empresa desde el menu de usuarios
@@ -81,6 +85,8 @@ router.post('/api/users/user/add', securityRoute, (request, response) => {
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
     })
+
+    mssql.close()
 })
 
 //modifica la información del usuario de correo
@@ -112,6 +118,8 @@ router.put('/api/users/user/:UsuarioID', securityRoute, (request, response) => {
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
     })
+
+    mssql.close()
 })
 
 module.exports = router
