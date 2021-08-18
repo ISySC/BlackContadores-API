@@ -16,11 +16,11 @@ router.get('/api/memberships/getmembershiplist', function(request, response){
     }).then(result => {
         console.log(result.recordset)
         response.status(200).send(result.recordset)
+
+        mssql.close()
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
     })
-
-    mssql.close()
 })
 
 router.post('/api/createCustomer', function(req, res){

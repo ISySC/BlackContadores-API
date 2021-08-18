@@ -28,11 +28,11 @@ router.post('/api/company/bankaccounts', securityRoute, (request, response) => {
                 response: result.recordsets[0]
             })
         }
+
+        mssql.close()
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
     })
-
-    mssql.close()
 })
 
 //agrega una cuentas de la empresa
@@ -57,11 +57,11 @@ router.post('/api/company/bankaccounts/addbankaccount', securityRoute, (request,
                 response: []
             })
         }
+
+        mssql.close()
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
     })
-
-    mssql.close()
 })
 
 //modificar una cuenta de la empresa
@@ -87,11 +87,11 @@ router.put('/api/company/bankaccounts/:CuentaID', securityRoute, (request, respo
                 response: []
             })
         }
+
+        mssql.close()
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
     })
-
-    mssql.close()
 })
 
 //recuperar la información de una cuenta
@@ -114,11 +114,11 @@ router.get('/api/company/bankaccount/:CuentaID', securityRoute, (request, respon
                 }
             })
         }
+
+        mssql.close()
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
     })
-
-    mssql.close()
 })
 
 //agregar registro diario
@@ -152,11 +152,11 @@ router.post('/api/company/addregistry', securityRoute, (request, response) => {
             })
         }
 
+        mssql.close()
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
     })
 
-    mssql.close()
 })
 
 //actualiza registro diario
@@ -189,12 +189,11 @@ router.put('/api/company/updateregistry', securityRoute, (request, response) => 
                 response: result.recordset
             })
         }
+        mssql.close()
 
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
     })
-
-    mssql.close()
 })
 
 //actualiza registro diario
@@ -212,11 +211,10 @@ router.put('/api/company/deleteregistry', securityRoute, (request, response) => 
             })
         }
 
+        mssql.close()
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
     })
-
-    mssql.close()
 })
 
 // recuperar los registros diarios de una empresa
@@ -238,11 +236,10 @@ router.post('/api/company/registries', securityRoute, (request, response) => {
             })
         }
 
+        mssql.close()
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
     })
-
-    mssql.close()
 })
 
 //recuperar las clasificaciones
@@ -256,11 +253,12 @@ router.get('/api/company/clasifications', securityRoute, (request, response) => 
                 response: result.recordsets[0]
             })
         }
+
+        mssql.close()
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
     })
 
-    mssql.close()
 })
 
 //recuperar un registro diario por folio
@@ -277,11 +275,11 @@ router.get('/api/company/registry/:folioID', securityRoute, (request, response) 
                 response: result.recordsets[0]
             })
         }
+
+        mssql.close()
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
     })
-
-    mssql.close()
 })
 
 //recuperar un registro diario por folio
@@ -311,11 +309,12 @@ router.post('/api/company/registries/:EmpresaTransID', securityRoute, (request, 
                 response: result.recordsets[0]
             })
         }
+
+        mssql.close()
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + error)
     })
 
-    mssql.close()
 })
 
 //agrega una subcategoria de la empresa
@@ -339,11 +338,12 @@ router.post('/api/company/subclasification', securityRoute, (request, response) 
                 response: null
             })
         }
+
+        mssql.close()
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + error)
     })
-    
-    mssql.close()
+
 })
 
 //editar una subcategoria de la empresa
@@ -369,11 +369,11 @@ router.put('/api/company/subclasification', securityRoute, (request, response) =
                 response: null
             })
         }
+
+        mssql.close()
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + error)
     })
-
-    mssql.close()
 })
 
 //recuperar las subclasificaciones
@@ -394,11 +394,12 @@ router.post('/api/company/subclasifications', securityRoute, (request, response)
                 response: result.recordsets[0]
             })
         }
+
+        mssql.close()
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
     })
 
-    mssql.close()
 })
 
 module.exports = router

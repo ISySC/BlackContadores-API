@@ -70,11 +70,11 @@ router.post('/api/user/createaccount', async (request, response) => {
             })
         }
 
+        mssql.close()
+
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
     })
-
-    mssql.close()
 })
 
 //inicio de sesión de usuario
@@ -124,11 +124,11 @@ router.post('/api/user/login', async (request, response) => {
             }
 
         }
+
+        mssql.close()
     }).catch((err) => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + err)
     })
-
-    mssql.close()
 })
 
 //eliminar token de usuario pare cerrar sesión
@@ -147,11 +147,11 @@ router.delete('/api/user/logout/:Token', securityRoute, async (request, response
                 response: []
             })
         }
+
+        mssql.close()
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + error)
     })
-
-    mssql.close()
 })
 
 module.exports = router
