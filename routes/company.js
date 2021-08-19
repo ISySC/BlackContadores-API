@@ -329,6 +329,7 @@ router.post('/api/company/registries/:EmpresaTransID', securityRoute, (request, 
 router.post('/api/company/subclasification', securityRoute, (request, response) => {
     let companyTransID = request.body.EmpresaTransID
     let clasificationID = request.body.ClasificacionID
+    let isActived = request.body.EsActivo
     let concept = request.body.Concepto
 
     mssql.connect(sqlConnect.dbconnection()).then(() => {
@@ -336,6 +337,7 @@ router.post('/api/company/subclasification', securityRoute, (request, response) 
             .input("EmpresaTransID", companyTransID)
             .input("ClasificacionID", clasificationID)
             .input("Concepto", concept)
+            .input("EsActivo", isActived)
             .execute("Usp_API_SubClasificacionAgregar")
     }).then(result => {
         mssql.close()
@@ -398,7 +400,7 @@ router.post('/api/company/subclasifications', securityRoute, (request, response)
             .execute("Usp_API_SubClasificacionRecuperar")
     }).then(result => {
         mssql.close()
-        
+
         if (result.recordsets[1][0].success) {
             response.status(200).json({
                 success: result.recordsets[1][0].success,
