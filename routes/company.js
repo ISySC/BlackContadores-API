@@ -137,6 +137,7 @@ router.post('/api/company/addregistry', securityRoute, (request, response) => {
     let cuentaID = request.body.cuentaID
     let observaciones = request.body.observaciones
     let importe = request.body.importe
+    let CreadoPor = request.body.CreadoPor
 
     mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
@@ -149,6 +150,7 @@ router.post('/api/company/addregistry', securityRoute, (request, response) => {
             .input('CuentaID', cuentaID)
             .input('Observaciones', observaciones)
             .input('Importe', importe)
+            .input('CreadoPor', CreadoPor)
             .execute("Usp_API_RegistroDiarioAgregar")
     }).then(result => {
         mssql.close()
@@ -298,11 +300,13 @@ router.post('/api/company/registries/:EmpresaTransID', securityRoute, (request, 
     let initDay = request.body.FechaInicio
     let finalDay = request.body.FechaFin
     let clasificationID = request.body.ClasificacionID
+    let subclasificacionID = request.body.SubClasificacionID 
 
     mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
             .input("EmpresaTransID", companyTransID)
             .input("ClasificacionID", clasificationID)
+            .input("SubClasificacionID", subclasificacionID)
             .input("FechaInicio", initDay)
             .input("FechaFin", finalDay)
             .execute("Usp_API_RegistrosDiarioPorParametrosEmpresaRecuperar")
