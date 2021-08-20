@@ -32,6 +32,7 @@ router.get('/api/users/:EmpresaTransID', securityRoute, (request, response) => {
 
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
+        mssql.close()
     })
 })
 
@@ -54,6 +55,7 @@ router.get('/api/users/user/:UsuarioID', securityRoute, (request, response) => {
 
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
+        mssql.close()
     })
 })
 
@@ -85,6 +87,7 @@ router.post('/api/users/user/add', securityRoute, (request, response) => {
 
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
+        mssql.close()
     })
 })
 
@@ -117,6 +120,7 @@ router.put('/api/users/user/:UsuarioID', securityRoute, (request, response) => {
         
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
+        mssql.close()
     })
 })
 

@@ -325,6 +325,7 @@ router.post('/api/company/registries/:EmpresaTransID', securityRoute, (request, 
 
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + error)
+        mssql.close()
     })
 
 })
@@ -357,6 +358,7 @@ router.post('/api/company/subclasification', securityRoute, (request, response) 
 
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + error)
+        mssql.close()
     })
 
 })
@@ -389,6 +391,7 @@ router.put('/api/company/subclasification', securityRoute, (request, response) =
 
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + error)
+        mssql.close()
     })
 })
 
@@ -415,6 +418,7 @@ router.post('/api/company/subclasifications', securityRoute, (request, response)
 
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
+        mssql.close()
     })
 
 })
@@ -442,6 +446,7 @@ router.post('/api/company/collections', securityRoute, (request, response) => {
 
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
+        mssql.close()
     })
 
 })
@@ -473,6 +478,7 @@ router.post('/api/company/collection/payment', securityRoute, (request, response
 
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
+        mssql.close()
     })
 
 })
