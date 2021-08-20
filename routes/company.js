@@ -415,6 +415,63 @@ router.post('/api/company/subclasifications', securityRoute, (request, response)
 
 })
 
+//Cobranza recuperar por empresa
+router.post('/api/company/collections', securityRoute, (request, response) => {
+    let companyTransID = request.body.EmpresaTransID
+    let isCxC = request.body.EsCxC
+
+    mssql.connect(sqlConnect.dbconnection()).then(() => {
+        return new mssql.Request()
+            .input("EmpresaTransID", companyTransID)
+            .input("EsCxC", isCxC)
+            .execute("Usp_API_CobranzaEmpresaRecuperar")
+    }).then(result => {
+        mssql.close()
+
+        if (result.recordsets[1][0].success) {
+            response.status(200).json({
+                success: result.recordsets[1][0].success,
+                message: result.recordsets[1][0].message,
+                response: result.recordsets[0]
+            })
+        }
+
+    }).catch(error => {
+        response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
+    })
+
+})
+
+//Cobranza recuperar por empresa
+router.post('/api/company/collection/payment', securityRoute, (request, response) => {
+    let isCxC = request.body.EsCxC
+    let amount = request.body.Abono
+    let createBy = request.body.CreadoPor
+    let total = request.body.Total
+
+    mssql.connect(sqlConnect.dbconnection()).then(() => {
+        return new mssql.Request()
+            .input("CxCID", isCxC)
+            .input("Abono", amount)
+            .input("CreadoPor", createBy)
+            .input("Total", total)
+            .execute("Usp_API_PagoCobranzaAgregar")
+    }).then(result => {
+        mssql.close()
+
+        if (result.recordsets[0][0].success) {
+            response.status(200).json({
+                success: result.recordsets[0][0].success,
+                message: result.recordsets[0][0].message,
+                response: []
+            })
+        }
+
+    }).catch(error => {
+        response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
+    })
+
+})
 module.exports = router
 
 
