@@ -42,10 +42,12 @@ router.post('/api/company/bankaccounts/addbankaccount', securityRoute, (request,
     let descriptionBankAccount = request.body.descripcionCuenta
     let username = request.body.correoUsuario
     let isActived = request.body.esActivo
+    let typeofaccount = request.body.tipoCuentaID
 
     mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
             .input('EmpresaTransID', companyTransID)
+            .input('TipoCuentaID', typeofaccount)
             .input('DescripcionCuenta', descriptionBankAccount)
             .input('CorreoElectronico', username)
             .input('EsActivo', isActived)
@@ -481,6 +483,28 @@ router.post('/api/company/collection/payment', securityRoute, (request, response
         mssql.close()
     })
 
+})
+
+//recupera los tipos de cuenta para ingresos (efectivo o banco)
+router.get('/api/company/typeofaccount', (request, response) => {
+
+    mssql.connect(sqlConnect.dbconnection()).then(() => {
+        return new mssql.Request()
+            .execute("Usp_API_TipoCuentaRecuperar")
+    }).then(result => {
+        mssql.close()
+
+        if (result.recordsets[1][0].success) {
+            response.status(200).json({
+                success: result.recordsets[1][0].success,
+                message: result.recordsets[1][0].message,
+                response: result.recordsets[0]
+            })
+        }
+
+    }).catch(error => {
+        response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
+    })
 })
 module.exports = router
 

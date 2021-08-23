@@ -105,6 +105,7 @@ router.post('/api/user/login', async (request, response) => {
                 }).then(resultToken => {
                 
                     if (resultToken.recordsets[0][0].success) {
+                        mssql.close()
                         //se envia la respuesta al cliente
                         response.status(200).json({
                             token: accessToken,
@@ -113,10 +114,11 @@ router.post('/api/user/login', async (request, response) => {
                     }
                 }).catch((err) => {
                     response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + err)
+                    mssql.close()
                 })
             }
             else {
-                console.log(result.recordset[0]);
+                mssql.close()
                 response.status(200).json({
                     token: '',
                     response: {
@@ -127,7 +129,7 @@ router.post('/api/user/login', async (request, response) => {
             }
 
         }
-        mssql.close()
+      
 
     }).catch((err) => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + err)
