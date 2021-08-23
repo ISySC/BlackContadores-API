@@ -506,6 +506,72 @@ router.get('/api/company/typeofaccount', (request, response) => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
     })
 })
+
+//editar saldos iniciales de la empresa
+router.put('/api/company/openingbalances', securityRoute, (request, response) => {
+    let companyTransID = request.body.EmpresaTransID
+    let cash = request.body.Efectivo
+    let banks = request.body.Bancos
+    let debtsreceivable = request.body.DeudasCobrar
+    let fixedasset = request.body.ActivoFijo
+    let debtstopay = request.body.DeudasPagar
+    let initialcapital = request.body.CapitalInicial
+    let correoUsuario = request.body.CorreoUsuario
+
+    mssql.connect(sqlConnect.dbconnection()).then(() => {
+        return new mssql.Request()
+            .input("EmpresaTransID", companyTransID)
+            .input("Efectivo", cash)
+            .input("Bancos", banks)
+            .input("DeudasCobrar", debtsreceivable)
+            .input("ActivoFijo", fixedasset)
+            .input("DeudasPagar", debtstopay)
+            .input("CapitalInicial", initialcapital)
+            .input("CorreoUsuario", correoUsuario)
+            .execute("Usp_API_SaldoInicialEmpresaActualizar")
+    }).then(result => {
+        mssql.close()
+
+        if (result.recordsets[0][0].success) {
+
+            response.status(200).json({
+                success: result.recordsets[0][0].success,
+                message: result.recordsets[0][0].message,
+                response: null
+            })
+        }
+
+    }).catch(error => {
+        response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + error)
+        mssql.close()
+    })
+})
+
+//recuperar saldos iniciales de la empresa
+router.get('/api/company/openingbalances/:EmpresaTransID', securityRoute, (request, response) => {
+    let companyTransID = request.param.EmpresaTransID
+
+    mssql.connect(sqlConnect.dbconnection()).then(() => {
+        return new mssql.Request()
+            .input("EmpresaTransID", companyTransID)
+            .execute("Usp_API_SaldoInicialEmpresaRecuperar")
+    }).then(result => {
+        mssql.close()
+        if (result.recordsets[1][0].success) {
+
+            response.status(200).json({
+                success: result.recordsets[1][0].success,
+                message: result.recordsets[1][0].message,
+                response: result.recordsets[0]
+            })
+        }
+
+    }).catch(error => {
+        response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + error)
+        mssql.close()
+    })
+})
+
 module.exports = router
 
 
