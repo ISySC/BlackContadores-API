@@ -118,7 +118,8 @@ router.get('/api/company/bankaccount/:CuentaID', securityRoute, (request, respon
                 message: result.recordsets[0][0].message,
                 response: {
                     'Descripcion': result.recordsets[0][0].Descripcion,
-                    'EsActivo': result.recordsets[0][0].EsActivo
+                    'EsActivo': result.recordsets[0][0].EsActivo,
+                    'TipoCuentaID': result.recordsets[0][0].TipoCuentaID
                 }
             })
         }
@@ -163,7 +164,7 @@ router.post('/api/company/addregistry', securityRoute, (request, response) => {
         }
 
     }).catch(error => {
-        response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
+        response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + error)
     })
 
 })
@@ -428,12 +429,12 @@ router.post('/api/company/subclasifications', securityRoute, (request, response)
 //Cobranza recuperar por empresa
 router.post('/api/company/collections', securityRoute, (request, response) => {
     let companyTransID = request.body.EmpresaTransID
-    let isCxC = request.body.EsCxC
+    let typeofaccount = request.body.TipoCuentaID
 
     mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
             .input("EmpresaTransID", companyTransID)
-            .input("EsCxC", isCxC)
+            .input("TipoCuentaID", typeofaccount)
             .execute("Usp_API_CobranzaEmpresaRecuperar")
     }).then(result => {
         mssql.close()
