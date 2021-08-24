@@ -549,7 +549,7 @@ router.put('/api/company/openingbalances', securityRoute, (request, response) =>
 
 //recuperar saldos iniciales de la empresa
 router.get('/api/company/openingbalances/:EmpresaTransID', securityRoute, (request, response) => {
-    let companyTransID = request.param.EmpresaTransID
+    let companyTransID = request.params.EmpresaTransID
 
     mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
@@ -563,6 +563,58 @@ router.get('/api/company/openingbalances/:EmpresaTransID', securityRoute, (reque
                 success: result.recordsets[1][0].success,
                 message: result.recordsets[1][0].message,
                 response: result.recordsets[0]
+            })
+        }
+
+    }).catch(error => {
+        response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + error)
+        mssql.close()
+    })
+})
+
+//recuperar numero de reportes para la descarga
+router.get('/api/company/reports/:EmpresaTransID', securityRoute, (request, response) => {
+    let companyTransID = request.params.EmpresaTransID
+
+    console.log(companyTransID)
+    mssql.connect(sqlConnect.dbconnection()).then(() => {
+        return new mssql.Request()
+            .input("EmpresaTransID", companyTransID)
+            .execute("Usp_API_ReportesMesEmpresaRecuperar")
+    }).then(result => {
+        mssql.close()
+        if (result.recordsets[1][0].success) {
+
+            response.status(200).json({
+                success: result.recordsets[1][0].success,
+                message: result.recordsets[1][0].message,
+                response: result.recordsets[0]
+            })
+        }
+
+    }).catch(error => {
+        response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + error)
+        mssql.close()
+    })
+})
+
+//editar saldos iniciales de la empresa
+router.put('/api/company/reports', securityRoute, (request, response) => {
+    let companyTransID = request.body.EmpresaTransID
+
+    mssql.connect(sqlConnect.dbconnection()).then(() => {
+        return new mssql.Request()
+            .input("EmpresaTransID", companyTransID)
+            .execute("Usp_API_ReportesMesEmpresaActualizar")
+    }).then(result => {
+        mssql.close()
+
+        if (result.recordsets[0][0].success) {
+
+            response.status(200).json({
+                success: result.recordsets[0][0].success,
+                message: result.recordsets[0][0].message,
+                response: []
             })
         }
 
