@@ -83,7 +83,7 @@ router.put('/api/company/bankaccounts/:CuentaID', securityRoute, (request, respo
             .input('CuentaID', accountID)
             .input('DescripcionCuenta', descriptionBankAccount)
             .input('CorreoElectronico', username)
-            .input('TipoCuentaID', typeofaccount)
+            .inpu('TipoCuentaID', typeofaccount)
             .input('EsActivo', isActived)
             .execute("Usp_API_CuentaBancoEmpresaEditar")
     }).then(result => {
@@ -140,6 +140,7 @@ router.post('/api/company/addregistry', securityRoute, (request, response) => {
     let clasificacionID = request.body.clasificacionID
     let subclasificacionID = request.body.subclasificacionID
     let cuentaID = request.body.cuentaID
+    let typeofaccuntpay = request.body.tipoPagoCuenta
     let observaciones = request.body.observaciones
     let importe = request.body.importe
     let CreadoPor = request.body.CreadoPor
@@ -153,6 +154,7 @@ router.post('/api/company/addregistry', securityRoute, (request, response) => {
             .input('ClasificacionID', clasificacionID)
             .input('SubClasificacionID', subclasificacionID)
             .input('CuentaID', cuentaID)
+            .input('TipoPagoCuenta', typeofaccuntpay)
             .input('Observaciones', observaciones)
             .input('Importe', importe)
             .input('CreadoPor', CreadoPor)
