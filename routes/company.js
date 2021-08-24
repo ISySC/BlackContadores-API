@@ -76,12 +76,14 @@ router.put('/api/company/bankaccounts/:CuentaID', securityRoute, (request, respo
     let descriptionBankAccount = request.body.descripcionCuenta
     let username = request.body.correoUsuario
     let isActived = request.body.esActivo
+    let typeofaccount = request.body.tipoCuentaID
 
     mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
             .input('CuentaID', accountID)
             .input('DescripcionCuenta', descriptionBankAccount)
             .input('CorreoElectronico', username)
+            .inpunt('TipoCuentaID', typeofaccount)
             .input('EsActivo', isActived)
             .execute("Usp_API_CuentaBancoEmpresaEditar")
     }).then(result => {
