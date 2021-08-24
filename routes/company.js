@@ -83,7 +83,7 @@ router.put('/api/company/bankaccounts/:CuentaID', securityRoute, (request, respo
             .input('CuentaID', accountID)
             .input('DescripcionCuenta', descriptionBankAccount)
             .input('CorreoElectronico', username)
-            .inpunt('TipoCuentaID', typeofaccount)
+            .input('TipoCuentaID', typeofaccount)
             .input('EsActivo', isActived)
             .execute("Usp_API_CuentaBancoEmpresaEditar")
     }).then(result => {
