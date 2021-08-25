@@ -603,7 +603,7 @@ router.get('/api/company/reports/:EmpresaTransID', securityRoute, (request, resp
     })
 })
 
-//editar saldos iniciales de la empresa
+//actualizar numero de reporte mensual de la empresa
 router.put('/api/company/reports', securityRoute, (request, response) => {
     let companyTransID = request.body.EmpresaTransID
 
@@ -620,6 +620,32 @@ router.put('/api/company/reports', securityRoute, (request, response) => {
                 success: result.recordsets[0][0].success,
                 message: result.recordsets[0][0].message,
                 response: []
+            })
+        }
+
+    }).catch(error => {
+        response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + error)
+        mssql.close()
+    })
+})
+
+//obtener balance general de la empresa
+router.get('/api/company/balancegeneral/:EmpresaTransID', securityRoute, (request, response) => {
+    let companyTransID = request.params.EmpresaTransID
+
+    mssql.connect(sqlConnect.dbconnection()).then(() => {
+        return new mssql.Request()
+            .input("EmpresaTransID", companyTransID)
+            .execute("Usp_API_BalanceGeneralEmpresaRecuperar")
+    }).then(result => {
+        mssql.close()
+
+        if (result.recordsets[1][0].success) {
+
+            response.status(200).json({
+                success: result.recordsets[1][0].success,
+                message: result.recordsets[1][0].message,
+                response: result.recordsets[0]
             })
         }
 
