@@ -58,11 +58,18 @@ router.put('/api/profile/:EmpresaTransID', securityRoute, (request, response) =>
     let activityID = request.body.ActividadID
     let otroGiro = 0//request.body.OtroGiroEmpresa
     let emailUser = request.body.CorreoUsuario
+    let isChangedPassword = request.body.EsCambiarContrasena
 
-    //Encriptacion de la contraseña
-    const saltRounds = 10;
-    var salt = bcrypt.genSaltSync(saltRounds);
-    var password = bcrypt.hashSync(request.body.Contrasena, salt);
+    var password = ""
+
+    if(isChangedPassword){
+        //Encriptacion de la contraseña
+        const saltRounds = 10;
+        var salt = bcrypt.genSaltSync(saltRounds);
+        password = bcrypt.hashSync(request.body.Contrasena, salt);
+    }
+    else
+        password = request.body.Contrasena
 
     mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
