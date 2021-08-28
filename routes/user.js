@@ -22,17 +22,18 @@ router.get('/api/users/:EmpresaTransID', securityRoute, (request, response) => {
             .input('EmpresaTransID', companyTransID)
             .execute("Usp_API_UsuariosEmpresaRecuperar")
     }).then(result => {
-        mssql.close()
-        
+                
         response.status(200).json({
             success: 'true',
             message: 'Usuarios de la empresa recuperados exitosamente',
             response: result.recordsets[0]
         })
 
+        return mssql.close()
+
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
-        mssql.close()
+        return mssql.close()
     })
 })
 
@@ -45,7 +46,6 @@ router.get('/api/users/user/:UsuarioID', securityRoute, (request, response) => {
             .input('UsuarioID', userID)
             .execute("Usp_API_UsuarioEmpresaRecuperar")
     }).then(result => {
-        mssql.close()
 
         response.status(200).json({
             success: 'true',
@@ -53,9 +53,11 @@ router.get('/api/users/user/:UsuarioID', securityRoute, (request, response) => {
             response: result.recordsets[0]
         })
 
+        return mssql.close()
+
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
-        mssql.close()
+        return mssql.close()
     })
 })
 
@@ -78,16 +80,16 @@ router.post('/api/users/user/add', securityRoute, (request, response) => {
             .input('Contrasena', password)
             .execute("Usp_API_UsuarioEmpresaDisponibleAgregar")
     }).then(result => {
-        mssql.close()
+       
         response.status(200).json({
             success: result.recordsets[0][0].success,
             message: result.recordsets[0][0].message,
             response: []
         })
-
+        return mssql.close()
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
-        mssql.close()
+        return mssql.close()
     })
 })
 
@@ -111,16 +113,18 @@ router.put('/api/users/user/:UsuarioID', securityRoute, (request, response) => {
             .input('EsActivo', isActived)
             .execute("Usp_API_UsuarioEmpresaDisponibleEditar")
     }).then(result => {
-        mssql.close()
+        
         response.status(200).json({
             success: result.recordsets[0][0].success,
             message: result.recordsets[0][0].message,
             response: []
         })
+
+        return mssql.close()
         
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
-        mssql.close()
+        return mssql.close()
     })
 })
 

@@ -39,8 +39,7 @@ router.post('/api/user/createaccount', async (request, response) => {
             .execute("Usp_API_UsuarioRegistroAgregar")
     }).then(result => {
         if (result.recordset[0].success == 'true') {
-            mssql.close()
-
+            
             stmp.sendEmailAccount(legalNamePerson, email, companyName, email)
 
             if (membershipID == 1)//membresia / plan gratuito
@@ -66,17 +65,19 @@ router.post('/api/user/createaccount', async (request, response) => {
                 response: result.recordset
             })
 
+            return mssql.close()
+
         } else {
             response.status(200).json({
                 token: '',
                 response: result.recordset[0]
             })
-            mssql.close()
+            return mssql.close()
         }
 
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
-        mssql.close()
+        return mssql.close()
     })
 })
 
@@ -95,7 +96,7 @@ router.post('/api/user/login', async (request, response) => {
 
             if (bcrypt.compareSync(request.body.Contrasena, result.recordsets[0][0].Contrasena)) {
                 let accessToken = authToken.createToken(username, result.recordsets[0][0].Contrasena)
-                mssql.close()
+                
                 //se agrega el token del usuario a la base de datos
                 mssql.connect(sqlConnect.dbconnection()).then(() => {
                     return new mssql.Request()
@@ -105,20 +106,21 @@ router.post('/api/user/login', async (request, response) => {
                 }).then(resultToken => {
 
                     if (resultToken.recordsets[0][0].success) {
-                        mssql.close()
+                       
                         //se envia la respuesta al cliente
                         response.status(200).json({
                             token: accessToken,
                             response: result.recordsets[0]
                         })
                     }
+                    return mssql.close()
                 }).catch((err) => {
                     response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + err)
-                    mssql.close()
+                    return mssql.close()
                 })
             }
             else {
-                mssql.close()
+                
                 response.status(200).json({
                     token: '',
                     response: {
@@ -128,10 +130,11 @@ router.post('/api/user/login', async (request, response) => {
                         }
                     }
                 })
+
+                return mssql.close()
             }
 
         } else {
-            mssql.close()
 
             response.status(200).json({
                 response: {
@@ -140,12 +143,14 @@ router.post('/api/user/login', async (request, response) => {
                     message: result.recordsets[0][0].message
                 }
             })
+
+            return mssql.close()
         }
 
 
     }).catch((err) => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + err)
-        mssql.close()
+        return mssql.close()
     })
 })
 
@@ -158,8 +163,7 @@ router.delete('/api/user/logout/:Token', securityRoute, async (request, response
             .input("Token", token)
             .execute("Usp_API_CerrarSesion")
     }).then(result => {
-        mssql.close()
-
+       
         if (result.recordsets[0][0].success) {
             response.status(200).json({
                 success: result.recordsets[0][0].success,
@@ -168,9 +172,11 @@ router.delete('/api/user/logout/:Token', securityRoute, async (request, response
             })
         }
 
+        return mssql.close()
+
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + error)
-        mssql.close()
+        return mssql.close()
     })
 })
 
@@ -193,6 +199,7 @@ router.post('/api/user/recoverypassword', async (request, response) => {
                 message: 'Se ha enviado un correo electrónico con la información para la recuperación de la contraseña. Favor de ingresar y cambiar la contraseña temporal a una que sea fácil de recordar.',
                 response: result.recordsets[0]
             })
+
         }
         else {
             
@@ -203,9 +210,11 @@ router.post('/api/user/recoverypassword', async (request, response) => {
             })
         }
 
+        return mssql.close()
+
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
-        mssql.close()
+        return mssql.close()
     })
 })
 

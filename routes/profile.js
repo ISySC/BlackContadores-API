@@ -26,7 +26,7 @@ router.post('/api/profile/:EmpresaTransID', securityRoute, (request, response) =
             .execute("Usp_API_PerfilUsuarioRecuperar")
     }).then(result => {
         if (result.recordsets[5][0].success) {
-            mssql.close()
+           
             response.status(200).json({
                 message: result.recordsets[5][0].message,
                 success: result.recordsets[5][0].success,
@@ -38,11 +38,13 @@ router.post('/api/profile/:EmpresaTransID', securityRoute, (request, response) =
                     'actividades': result.recordsets[4]
                 }
             })
+
+            return mssql.close()
         }
 
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
-        mssql.close()
+        return mssql.close()
     })
 })
 
@@ -91,10 +93,10 @@ router.put('/api/profile/:EmpresaTransID', securityRoute, (request, response) =>
             })
         }
 
-        mssql.close()
+        return mssql.close()
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
-        mssql.close()
+        return mssql.close()
     })
 })
 
