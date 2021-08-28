@@ -91,7 +91,7 @@ router.post('/api/user/login', async (request, response) => {
             .execute("Usp_API_IniciarSesionRecuperar")
     }).then(async result => {
 
-        if (result.recordsets[0][0].success) {
+        if (result.recordsets[0][0].success == 'true') {
 
             if (bcrypt.compareSync(request.body.Contrasena, result.recordsets[0][0].Contrasena)) {
                 let accessToken = authToken.createToken(username, result.recordsets[0][0].Contrasena)
@@ -103,7 +103,7 @@ router.post('/api/user/login', async (request, response) => {
                         .input('CorreoUsuario', username)
                         .execute("Usp_API_UsuarioTokenAgregar")
                 }).then(resultToken => {
-                
+
                     if (resultToken.recordsets[0][0].success) {
                         mssql.close()
                         //se envia la respuesta al cliente
@@ -122,14 +122,26 @@ router.post('/api/user/login', async (request, response) => {
                 response.status(200).json({
                     token: '',
                     response: {
-                        success: "false",
-                        message: "La credenciales ingresadas no coinciden, favor de revisar."
+                        response:{
+                            success: "false",
+                            message: "La credenciales ingresadas no coinciden, favor de revisar."
+                        }
                     }
                 })
             }
 
+        } else {
+            mssql.close()
+
+            response.status(200).json({
+                response: {
+                    token: '',
+                    success: "false",
+                    message: result.recordsets[0][0].message
+                }
+            })
         }
-      
+
 
     }).catch((err) => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + err)
@@ -158,6 +170,41 @@ router.delete('/api/user/logout/:Token', securityRoute, async (request, response
 
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + error)
+        mssql.close()
+    })
+})
+
+//recuperar contraseña
+router.post('/api/user/recoverypassword', async (request, response) => {
+    let email = request.body.correousuario
+
+    mssql.connect(sqlConnect.dbconnection()).then(() => {
+        return new mssql.Request()
+            .input('CorreoUsuario', email)
+            .execute("Usp_API_ContrasenaUsuarioRecuperar")
+    }).then(result => {
+
+        if (result.recordsets[0][0].success == 'true') {
+           
+            stmp.sendEmailRecoveryPassword(result.recordsets[0][0].legalNamePerson, email, result.recordsets[0][0].contrasenaTemporal)
+
+            response.status(200).json({
+                success: result.recordsets[0][0].success,
+                message: 'Se ha enviado un correo electrónico con la información para la recuperación de la contraseña. Favor de ingresar y cambiar la contraseña temporal a una que sea fácil de recordar.',
+                response: result.recordsets[0]
+            })
+        }
+        else {
+            
+            response.status(200).json({
+                success: result.recordsets[0][0].success,
+                message: result.recordsets[0][0].message,
+                response: result.recordsets[0]
+            })
+        }
+
+    }).catch(error => {
+        response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
         mssql.close()
     })
 })
