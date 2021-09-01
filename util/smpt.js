@@ -36,7 +36,7 @@ function sendEmailAccount(nombre, correo, nombreEmpresa, usuarioAcceso){
             console.log(errorMail)
         }
         else
-          console.log("Envió satisfactorio")
+          console.log("Envió satisfactorio  | cuenta")
     });
 
 }
@@ -74,7 +74,7 @@ function sendEmailMembership(fechaVencimiento, tipoPlan, fechaActivacion, perioc
           }
       }
       else
-        console.log("Envió satisfactorio")
+        console.log("Envió satisfactorio | plans")
   });
 
 }
@@ -97,7 +97,7 @@ function sendEmailRecoveryPassword(nombre, correo, contrasena){
               '<br><br><span style="font-family: Helvetica;font-size: 14px">ESTA ES SU INFORMACIÓN:</span>' +
               '<br><span style="font-family: Helvetica;font-size: 14px">Contraseña temporal: <b>' + contrasena + '</b></span>' +
               '<br><span style="font-family: Helvetica;font-size: 14px">Correo electrónico registrado: <b>' + correo + '</b></span>' +
-              '<br><br><span style="font-family: Helvetica;font-size: 14px"><b>Es IMPORTANTE una vez que acceda a su cuenta, cambiar la contraseña por una personal en la sección de Perfil </span>' + 
+              '<br><br><span style="font-family: Helvetica;font-size: 14px"><b>Es IMPORTANTE una vez que acceda a su cuenta, cambiar la contraseña por una personal en la sección Perfil </span>' + 
               '<br><br><br><span style="font-family: Helvetica;font-size: 14px">Derechos reservados <span>&#169;</span> 2021. Black Administrativo, una solución de <a href="http://contadoresblack.com/" target="_blank">Black Contadores.</a></span>'
       };
 
