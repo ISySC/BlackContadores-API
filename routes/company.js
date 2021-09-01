@@ -243,7 +243,7 @@ router.put('/api/company/deleteregistry', securityRoute, (request, response) => 
 router.post('/api/company/registries', securityRoute, (request, response) => {
     let empresaTransID = request.body.EmpresaTransID
     let fechaRegistro = request.body.FechaRegistro
-    
+
     new mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
             .input('EmpresaTransID', empresaTransID)
@@ -518,6 +518,7 @@ router.put('/api/company/openingbalances', securityRoute, (request, response) =>
     let fixedasset = request.body.ActivoFijo
     let debtstopay = request.body.DeudasPagar
     let initialcapital = request.body.CapitalInicial
+    let finalcapital = request.body.CapitalFinal
     let correoUsuario = request.body.CorreoUsuario
 
     new mssql.connect(sqlConnect.dbconnection()).then(() => {
@@ -529,6 +530,7 @@ router.put('/api/company/openingbalances', securityRoute, (request, response) =>
             .input("ActivoFijo", fixedasset)
             .input("DeudasPagar", debtstopay)
             .input("CapitalInicial", initialcapital)
+            .input("CapitalFinal", finalcapital)
             .input("CorreoUsuario", correoUsuario)
             .execute("Usp_API_SaldoInicialEmpresaActualizar")
     }).then(result => {
