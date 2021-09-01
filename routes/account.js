@@ -93,7 +93,6 @@ router.post('/api/user/login', async (request, response) => {
     }).then(async result => {
 
         if (result.recordsets[0][0].success == 'true') {
-
             if (bcrypt.compareSync(request.body.Contrasena, result.recordsets[0][0].Contrasena)) {
                 let accessToken = authToken.createToken(username, result.recordsets[0][0].Contrasena)
 
@@ -143,14 +142,11 @@ router.post('/api/user/login', async (request, response) => {
                     message: result.recordsets[0][0].message
                 }
             })
-
-            return mssql.close()
         }
 
 
     }).catch((err) => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + err)
-        return mssql.close()
     })
 })
 
@@ -195,8 +191,8 @@ router.post('/api/user/recoverypassword', async (request, response) => {
             //Encriptacion de la contraseña
             const saltRounds = 10;
             var salt = bcrypt.genSaltSync(saltRounds);
-            var hash = bcrypt.hashSync(result.recordsets[0][0].contrasenaTemporal, salt);
-
+            var hash = bcrypt.hashSync(String(result.recordsets[0][0].contrasenaTemporal), salt);
+            console.log(hash)
             stmp.sendEmailRecoveryPassword(result.recordsets[0][0].legalNamePerson, email, result.recordsets[0][0].contrasenaTemporal)
 
             //mandar el hash a la base de datos
@@ -214,7 +210,7 @@ router.post('/api/user/recoverypassword', async (request, response) => {
                 })
 
             }).catch(error => {
-                response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
+                response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + error)
             })
         }
         else {
@@ -226,11 +222,9 @@ router.post('/api/user/recoverypassword', async (request, response) => {
             })
         }
 
-        return mssql.close()
-
     }).catch(error => {
-        response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
-        return mssql.close()
+        response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + error)
+        
     })
 })
 
