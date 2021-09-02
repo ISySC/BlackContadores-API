@@ -123,10 +123,8 @@ router.post('/api/user/login', async (request, response) => {
                 response.status(200).json({
                     token: '',
                     response: {
-                        response: {
-                            success: "false",
-                            message: "La credenciales ingresadas no coinciden, favor de revisar."
-                        }
+                        success: "false",
+                        message: "La credenciales ingresadas no coinciden, favor de revisar."
                     }
                 })
 
@@ -204,8 +202,8 @@ router.post('/api/user/recoverypassword', async (request, response) => {
             }).then(result1 => {
 
                 response.status(200).json({
-                    success: result1.recordsets[0][0].success,
-                    message: 'Se ha enviado un correo electrónico con la información para la recuperación de la contraseña. Favor de ingresar y cambiar la contraseña temporal a una que sea fácil de recordar.',
+                    success: result.recordsets[0][0].success,
+                    message: 'Se ha enviado un correo electrónico con la información para la recuperación de la contraseña. Favor de verificar el correo y continuar con el proceso.',
                     response: result.recordsets[0]
                 })
 
@@ -224,7 +222,7 @@ router.post('/api/user/recoverypassword', async (request, response) => {
 
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + error)
-        
+
     })
 })
 
