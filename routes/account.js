@@ -95,7 +95,7 @@ router.post('/api/user/login', async (request, response) => {
         if (result.recordsets[0][0].success == 'true') {
             if (bcrypt.compareSync(request.body.Contrasena, result.recordsets[0][0].Contrasena)) {
                 let accessToken = authToken.createToken(username, result.recordsets[0][0].Contrasena)
-
+                mssql.close()
                 //se agrega el token del usuario a la base de datos
                 new mssql.connect(sqlConnect.dbconnection()).then(() => {
                     return new mssql.Request()
