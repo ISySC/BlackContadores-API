@@ -103,7 +103,7 @@ router.post('/api/user/login', async (request, response) => {
                         .input('CorreoUsuario', username)
                         .execute("Usp_API_UsuarioTokenAgregar")
                 }).then(resultToken => {
-
+                    mssql.close()
                     if (resultToken.recordsets[0][0].success) {
 
                         //se envia la respuesta al cliente
