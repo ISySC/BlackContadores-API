@@ -71,12 +71,12 @@ router.post('/api/user/createaccount', async (request, response) => {
                 token: '',
                 response: result.recordset[0]
             })
-            return mssql.close()
+            
         }
 
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
-        return mssql.close()
+        
     })
 
 })
@@ -112,10 +112,10 @@ router.post('/api/user/login', async (request, response) => {
                             response: result.recordsets[0]
                         })
                     }
-                    return mssql.close()
+                    
                 }).catch((err) => {
                     response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + err)
-                    return mssql.close()
+                    
                 })
             }
             else {
@@ -128,7 +128,7 @@ router.post('/api/user/login', async (request, response) => {
                     }
                 })
 
-                return mssql.close()
+                
             }
 
         } else {
@@ -166,11 +166,11 @@ router.delete('/api/user/logout/:Token', securityRoute, async (request, response
             })
         }
 
-        return mssql.close()
+        
 
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + error)
-        return mssql.close()
+        
     })
 })
 
