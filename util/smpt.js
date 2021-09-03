@@ -8,14 +8,14 @@ function sendEmailAccount(nombre, correo, nombreEmpresa, usuarioAcceso){
     var transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-          user: 'emmanuel.aries@gmail.com',
-          pass: 'm0n0h3lb1ng3r'
+          user: 'administracion@contadoresblack.com',
+          pass: 'blackadmon.1234'
         }});
         
         var mailoptions =  {
-          from: 'Black Contadores <emmanuel.aries@gmail.com>',
+          from: 'Administración Black <administracion@contadoresblack.com>',
           to: correo,
-          subject: 'Registro | Black Administrativo',
+          subject: 'Registro | Administración Black',
           html: '<span style="font-family: Helvetica;font-size: 14px">Buen día <b>' + nombre  + '</b></span>' + 
                 '<br><br><span style="font-family: Helvetica;font-size: 14px"><b>Black Administrativo</b> agredece su preferencia; a continuación enviamos información de su cuenta recientemente creada </span>' + 
                 '<br><br><span style="font-family: Helvetica;font-size: 14px">ESTA ES SU INFORMACIÓN:</span>' +
@@ -36,7 +36,7 @@ function sendEmailAccount(nombre, correo, nombreEmpresa, usuarioAcceso){
             console.log(errorMail)
         }
         else
-          console.log("Envió satisfactorio  | cuenta")
+          console.log("Envió satisfactorio")
     });
 
 }
@@ -46,14 +46,14 @@ function sendEmailMembership(fechaVencimiento, tipoPlan, fechaActivacion, perioc
   var transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: 'emmanuel.aries@gmail.com',
-        pass: 'm0n0h3lb1ng3r'
+        user: 'administracion@contadoresblack.com',
+        pass: 'blackadmon.1234'
       }});
       
       var mailoptions =  {
-        from: 'Black Contadores <emmanuel.aries@gmail.com>',
+        from: 'Administración Black <administracion@contadoresblack.com>',
         to: correo,
-        subject: 'Black Administrativo | Plan ' + tipoPlan + ' ',
+        subject: 'Administración Black | Plan ' + tipoPlan + ' ',
         html: '<span style="font-family: Helvetica;font-size: 14px">Buen día <b>' + nombre  + '</b></span>' + 
               '<br><br><span style="font-family: Helvetica;font-size: 14px"><b>Black Administrativo</b> agredece su preferencia; a continuación enviamos información referente a su plan seccionado </span>' + 
               '<br><br><span style="font-family: Helvetica;font-size: 14px">ESTA ES SU INFORMACIÓN:</span>' +
@@ -74,7 +74,7 @@ function sendEmailMembership(fechaVencimiento, tipoPlan, fechaActivacion, perioc
           }
       }
       else
-        console.log("Envió satisfactorio | plans")
+        console.log("Envió satisfactorio")
   });
 
 }
@@ -84,20 +84,20 @@ function sendEmailRecoveryPassword(nombre, correo, contrasena){
   var transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: 'emmanuel.aries@gmail.com',
-        pass: 'm0n0h3lb1ng3r'
+        user: 'administracion@contadoresblack.com',
+        pass: 'blackadmon.1234'
       }});
       
       var mailoptions =  {
-        from: 'Black Contadores <emmanuel.aries@gmail.com>',
+        from: 'Administración Black <administracion@contadoresblack.com>',
         to: correo,
-        subject: 'Recuperación de contraseña | Black Administrativo',
+        subject: 'Recuperación de contraseña | Administración Black',
         html: '<span style="font-family: Helvetica;font-size: 14px">Buen día <b>' + nombre  + '</b></span>' + 
               '<br><br><span style="font-family: Helvetica;font-size: 14px"><b>Black Administrativo</b> agredece su preferencia; a continuación, enviamos la contraseña temporal generada para el accesso a su cuenta </span>' + 
               '<br><br><span style="font-family: Helvetica;font-size: 14px">ESTA ES SU INFORMACIÓN:</span>' +
               '<br><span style="font-family: Helvetica;font-size: 14px">Contraseña temporal: <b>' + contrasena + '</b></span>' +
               '<br><span style="font-family: Helvetica;font-size: 14px">Correo electrónico registrado: <b>' + correo + '</b></span>' +
-              '<br><br><span style="font-family: Helvetica;font-size: 14px"><b>Es IMPORTANTE una vez que acceda a su cuenta, cambiar la contraseña por una personal en la sección Perfil </span>' + 
+              '<br><br><span style="font-family: Helvetica;font-size: 14px"><b>Es IMPORTANTE una vez que acceda a su cuenta, cambiar la contraseña por una personal en la sección de Perfil </span>' + 
               '<br><br><br><span style="font-family: Helvetica;font-size: 14px">Derechos reservados <span>&#169;</span> 2021. Black Administrativo, una solución de <a href="http://contadoresblack.com/" target="_blank">Black Contadores.</a></span>'
       };
 
