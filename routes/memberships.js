@@ -11,7 +11,7 @@ conekta.api_key = 'key_THEXVyarQFRAkMmoLJbpGw'; //  <-- Mock private key, please
 conekta.api_version = '2.0.0';
 
 router.get('/api/memberships/getmembershiplist', function(request, response){
-    new mssql.connect(sqlConnect.dbconnection()).then(() => {
+    mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request().execute("Usp_API_CatalogoMembresiasRecuperar")
     }).then(result => {
         
