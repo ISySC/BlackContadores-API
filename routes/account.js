@@ -119,7 +119,7 @@ router.post('/api/user/login', async (request, response) => {
                 })
             }
             else {
-
+                
                 response.status(200).json({
                     token: '',
                     response: {
@@ -128,7 +128,7 @@ router.post('/api/user/login', async (request, response) => {
                     }
                 })
 
-                
+                mssql.close()
             }
 
         } else {
