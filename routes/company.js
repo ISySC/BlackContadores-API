@@ -244,7 +244,7 @@ router.post('/api/company/registries', securityRoute, (request, response) => {
     let empresaTransID = request.body.EmpresaTransID
     let fechaRegistro = request.body.FechaRegistro
 
-    new mssql.connect(sqlConnect.dbconnection()).then(() => {
+    mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
             .input('EmpresaTransID', empresaTransID)
             .input('FechaRegistro', fechaRegistro)
