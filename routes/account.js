@@ -29,7 +29,7 @@ router.post('/api/user/createaccount', async (request, response) => {
     var salt = bcrypt.genSaltSync(saltRounds);
     var hash = bcrypt.hashSync(request.body.password, salt);
 
-    mssql.connect(sqlConnect.dbconnection()).then(() => {
+    new mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
             .input('NombreUsuario', legalNamePerson)
             .input('CorreoUsuario', email)

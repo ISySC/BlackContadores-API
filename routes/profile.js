@@ -19,7 +19,7 @@ router.post('/api/profile/:EmpresaTransID', securityRoute, (request, response) =
 
     let usuarioID = request.body.UsuarioID
 
-    mssql.connect(sqlConnect.dbconnection()).then(() => {
+    new mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
             .input('EmpresaTransID', companyTransID)
             .input('UsuarioID', usuarioID)
@@ -73,7 +73,7 @@ router.put('/api/profile/:EmpresaTransID', securityRoute, (request, response) =>
     else
         password = request.body.Contrasena
 
-    mssql.connect(sqlConnect.dbconnection()).then(() => {
+    new mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
             .input('EmpresaTransID', companyTransID)
             .input('RepresentanteLegal', legalName)

@@ -17,7 +17,7 @@ router.use(bodyParser.json())
 router.get('/api/users/:EmpresaTransID', securityRoute, (request, response) => {
     let companyTransID = request.params.EmpresaTransID
 
-    mssql.connect(sqlConnect.dbconnection()).then(() => {
+    new mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
             .input('EmpresaTransID', companyTransID)
             .execute("Usp_API_UsuariosEmpresaRecuperar")
@@ -41,7 +41,7 @@ router.get('/api/users/:EmpresaTransID', securityRoute, (request, response) => {
 router.get('/api/users/user/:UsuarioID', securityRoute, (request, response) => {
     let userID = request.params.UsuarioID
 
-    mssql.connect(sqlConnect.dbconnection()).then(() => {
+    new mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
             .input('UsuarioID', userID)
             .execute("Usp_API_UsuarioEmpresaRecuperar")
@@ -72,7 +72,7 @@ router.post('/api/users/user/add', securityRoute, (request, response) => {
     var salt = bcrypt.genSaltSync(saltRounds);
     var password = bcrypt.hashSync(request.body.Contrasena, salt);
 
-    mssql.connect(sqlConnect.dbconnection()).then(() => {
+    new mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
             .input('EmpresaTransID', companyTransID)
             .input('NombreUsuario', username)
@@ -105,7 +105,7 @@ router.put('/api/users/user/:UsuarioID', securityRoute, (request, response) => {
     var salt = bcrypt.genSaltSync(saltRounds);
     var password = bcrypt.hashSync(request.body.Contrasena, salt);
 
-    mssql.connect(sqlConnect.dbconnection()).then(() => {
+    new mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
             .input('UsuarioID', userID)
             .input('NombreUsuario', username)

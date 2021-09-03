@@ -146,6 +146,8 @@ router.post('/api/company/addregistry', securityRoute, (request, response) => {
     let importe = request.body.importe
     let CreadoPor = request.body.CreadoPor
 
+    console.log(request.body)
+
     new mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
             .input('EmpresaTransID', empresaTransID)
