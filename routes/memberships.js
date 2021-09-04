@@ -18,7 +18,7 @@ router.get('/api/memberships/getmembershiplist', function(request, response){
         mssql.close()
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
-         
+        mssql.close()
     })
 })
 

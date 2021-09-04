@@ -25,8 +25,9 @@ router.post('/api/profile/:EmpresaTransID', securityRoute, (request, response) =
             .input('UsuarioID', usuarioID)
             .execute("Usp_API_PerfilUsuarioRecuperar")
     }).then(result => {
+        mssql.close()
         if (result.recordsets[5][0].success) {
-           
+            
             response.status(200).json({
                 message: result.recordsets[5][0].message,
                 success: result.recordsets[5][0].success,
@@ -44,7 +45,7 @@ router.post('/api/profile/:EmpresaTransID', securityRoute, (request, response) =
 
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
-         
+        mssql.close()
     })
 })
 
@@ -54,7 +55,7 @@ router.put('/api/profile/:EmpresaTransID', securityRoute, (request, response) =>
 
     let legalName = request.body.RepresentanteLegal
     let companyName = request.body.NombreEmpresa
-    //let password = request.body.Contrasena
+    let phone = request.body.Telefono
     let giroID = request.body.GiroID
     let subgiroID = request.body.SubGiroID
     let activityID = request.body.ActividadID
@@ -79,6 +80,7 @@ router.put('/api/profile/:EmpresaTransID', securityRoute, (request, response) =>
             .input('RepresentanteLegal', legalName)
             .input('NombreEmpresa', companyName)
             .input('Contrasena', password)
+            .input('Telefono', phone)
             .input('GiroID', giroID)
             .input('SubGiroID', subgiroID)
             .input('ActividadID', activityID)
@@ -86,7 +88,7 @@ router.put('/api/profile/:EmpresaTransID', securityRoute, (request, response) =>
             .input('CorreoUsuario', emailUser)
             .execute("Usp_API_PerfilUsuarioEditar")
     }).then(result => {
-       
+        mssql.close()
         if (result.recordsets[0][0].success) {
             response.status(200).json({
                 response: result.recordsets[0]
@@ -96,8 +98,45 @@ router.put('/api/profile/:EmpresaTransID', securityRoute, (request, response) =>
          
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
-         
+        mssql.close()
     })
 })
+
+//actualizar información del pago de membresia del usuario
+router.put('/api/profile/payment/:EmpresaTransID', securityRoute, (request, response) => {
+
+    //Periodo = 'Me' (Mensual)
+    
+    let companyTransID = request.params.EmpresaTransID
+
+    let membershipID = request.body.MembresiaID
+    let frecuency = request.body.Periodo  
+    let payment = request.body.Pago
+    let emailUser = request.body.CorreoUsuario
+
+    new mssql.connect(sqlConnect.dbconnection()).then(() => {
+        return new mssql.Request()
+            .input('EmpresaTransID', companyTransID)
+            .input('MembresiaID', membershipID)
+            .input('Periodo', frecuency)
+            .input('Pago', payment)
+            .input('CorreoUsuario', emailUser)
+            .execute("Usp_API_MembresiaEmpresaEditar")
+    }).then(result => {
+        mssql.close()
+        if (result.recordsets[0][0].success) {
+            response.status(200).json({
+                response: result.recordsets[0]
+            })
+        }
+
+         
+    }).catch(error => {
+        response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
+        mssql.close()
+    })
+})
+
+
 
 module.exports = router
