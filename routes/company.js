@@ -421,6 +421,7 @@ router.post('/api/company/subclasifications', securityRoute, (request, response)
     let companyTransID = request.body.EmpresaTransID
     let mostrarInactivos = request.body.mostrarInactivos
 
+    mssql.close()
     new mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
             .input("EmpresaTransID", companyTransID)
