@@ -602,6 +602,7 @@ router.get('/api/company/reports/:EmpresaTransID', securityRoute, (request, resp
     let companyTransID = request.params.EmpresaTransID
     
     new mssql.connect(sqlConnect.dbconnection()).then(() => {
+        mssql.close()
         return new mssql.Request()
             .input("EmpresaTransID", companyTransID)
             .execute("Usp_API_ReportesMesEmpresaRecuperar")
@@ -654,7 +655,7 @@ router.put('/api/company/reports', securityRoute, (request, response) => {
 router.get('/api/company/balancegeneral/:EmpresaTransID', securityRoute, (request, response) => {
     let companyTransID = request.params.EmpresaTransID
     mssql.close()
-    
+
     new mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
             .input("EmpresaTransID", companyTransID)
