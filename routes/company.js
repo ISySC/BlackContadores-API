@@ -17,6 +17,8 @@ router.post('/api/company/bankaccounts', securityRoute, (request, response) => {
     let companyTransID = request.body.empresaTransID
     let showInactived = request.body.mostrarInactivos
 
+    mssql.close()
+
     new mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
             .input('EmpresaTransID', companyTransID)
@@ -276,6 +278,8 @@ router.post('/api/company/registries', securityRoute, (request, response) => {
 
 //recuperar las clasificaciones
 router.get('/api/company/clasifications', securityRoute, (request, response) => {
+    mssql.close()
+
     new mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
             .execute("Usp_API_ClasificacionesRecuperar")
@@ -649,7 +653,8 @@ router.put('/api/company/reports', securityRoute, (request, response) => {
 //obtener balance general de la empresa
 router.get('/api/company/balancegeneral/:EmpresaTransID', securityRoute, (request, response) => {
     let companyTransID = request.params.EmpresaTransID
-
+    mssql.close()
+    
     new mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
             .input("EmpresaTransID", companyTransID)
