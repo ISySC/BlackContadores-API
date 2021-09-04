@@ -595,7 +595,7 @@ router.get('/api/company/openingbalances/:EmpresaTransID', securityRoute, (reque
 //recuperar numero de reportes para la descarga
 router.get('/api/company/reports/:EmpresaTransID', securityRoute, (request, response) => {
     let companyTransID = request.params.EmpresaTransID
-
+    
     new mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
             .input("EmpresaTransID", companyTransID)
