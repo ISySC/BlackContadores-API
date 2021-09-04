@@ -453,6 +453,7 @@ router.post('/api/company/subclasifications', securityRoute, (request, response)
 router.post('/api/company/collections', securityRoute, (request, response) => {
     let companyTransID = request.body.EmpresaTransID
     let typeofaccount = request.body.TipoCuentaID
+    mssql.close()
 
     new mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
@@ -602,7 +603,7 @@ router.get('/api/company/reports/:EmpresaTransID', securityRoute, (request, resp
     let companyTransID = request.params.EmpresaTransID
     
     new mssql.connect(sqlConnect.dbconnection()).then(() => {
-        mssql.close()
+        
         return new mssql.Request()
             .input("EmpresaTransID", companyTransID)
             .execute("Usp_API_ReportesMesEmpresaRecuperar")
