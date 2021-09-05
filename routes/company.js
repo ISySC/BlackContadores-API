@@ -17,13 +17,15 @@ router.post('/api/company/bankaccounts', securityRoute, (request, response) => {
     let companyTransID = request.body.empresaTransID
     let showInactived = request.body.mostrarInactivos
 
+    mssql.close()
+
     new mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
             .input('EmpresaTransID', companyTransID)
             .input('MostrarInactivos', showInactived)
             .execute("Usp_API_CuentasEmpresaRecuperar")
     }).then(result => {
-       
+        mssql.close()
         if (result.recordsets[1][0].success) {
             response.status(200).json({
                 response: result.recordsets[0]
@@ -31,6 +33,7 @@ router.post('/api/company/bankaccounts', securityRoute, (request, response) => {
         }
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
+        mssql.close()
     })
 
 })
@@ -52,7 +55,7 @@ router.post('/api/company/bankaccounts/addbankaccount', securityRoute, (request,
             .input('EsActivo', isActived)
             .execute("Usp_API_CuentaBancoEmpresaAgregar")
     }).then(result => {
-
+        mssql.close()
         if (result.recordsets[0][0].success) {
            
 
@@ -66,6 +69,7 @@ router.post('/api/company/bankaccounts/addbankaccount', securityRoute, (request,
 
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
+        mssql.close()
     })
 
 })
@@ -88,7 +92,7 @@ router.put('/api/company/bankaccounts/:CuentaID', securityRoute, (request, respo
             .input('EsActivo', isActived)
             .execute("Usp_API_CuentaBancoEmpresaEditar")
     }).then(result => {
-       
+        mssql.close()
         if (result.recordsets[0][0].success) {
             response.status(200).json({
                 success: result.recordsets[0][0].success,
@@ -99,6 +103,7 @@ router.put('/api/company/bankaccounts/:CuentaID', securityRoute, (request, respo
 
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + error)
+        mssql.close()
     })
 
 })
@@ -112,7 +117,7 @@ router.get('/api/company/bankaccount/:CuentaID', securityRoute, (request, respon
             .input('CuentaID', bankaccount)
             .execute("Usp_API_CuentaEmpresaRecuperar")
     }).then(result => {
-
+        mssql.close()
         if (result.recordsets[0][0].success) {
 
             response.status(200).json({
@@ -128,6 +133,7 @@ router.get('/api/company/bankaccount/:CuentaID', securityRoute, (request, respon
 
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
+        mssql.close()
     })
     
 })
@@ -145,6 +151,9 @@ router.post('/api/company/addregistry', securityRoute, (request, response) => {
     let observaciones = request.body.observaciones
     let importe = request.body.importe
     let CreadoPor = request.body.CreadoPor
+    let isCxC = request.body.EsCxC
+
+    console.log(request.body)
 
     new mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
@@ -156,12 +165,13 @@ router.post('/api/company/addregistry', securityRoute, (request, response) => {
             .input('SubClasificacionID', subclasificacionID)
             .input('CuentaID', cuentaID)
             .input('TipoPagoCuenta', typeofaccuntpay)
+            .input('EsCxC', isCxC)
             .input('Observaciones', observaciones)
             .input('Importe', importe)
             .input('CreadoPor', CreadoPor)
             .execute("Usp_API_RegistroDiarioAgregar")
     }).then(result => {
-        
+        mssql.close()
         if (result.recordset[0].success) {
             response.status(200).json({
                 response: result.recordset
@@ -169,6 +179,7 @@ router.post('/api/company/addregistry', securityRoute, (request, response) => {
         }
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + error)
+        mssql.close()
     })
 
 })
@@ -198,6 +209,7 @@ router.put('/api/company/updateregistry', securityRoute, (request, response) => 
             .input('Importe', importe)
             .execute("Usp_API_RegistroDiarioEditar")
     }).then(result => {
+        mssql.close()
         if (result.recordset[0].success) {
            
             response.status(200).json({
@@ -207,6 +219,7 @@ router.put('/api/company/updateregistry', securityRoute, (request, response) => 
 
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
+        mssql.close()
     })
 
     
@@ -222,7 +235,7 @@ router.put('/api/company/deleteregistry', securityRoute, (request, response) => 
             .input('FolioID', folioID)
             .execute("Usp_API_RegistroDiarioEliminar")
     }).then(result => {
-
+        mssql.close()
         if (result.recordset[0].success) {
             response.status(200).json({
                 response: result.recordset
@@ -230,6 +243,7 @@ router.put('/api/company/deleteregistry', securityRoute, (request, response) => 
         }
 
     }).catch(error => {
+        mssql.close()
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
     })
 
@@ -242,13 +256,13 @@ router.post('/api/company/registries', securityRoute, (request, response) => {
     let empresaTransID = request.body.EmpresaTransID
     let fechaRegistro = request.body.FechaRegistro
 
-    new mssql.connect(sqlConnect.dbconnection()).then(() => {
+    mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
             .input('EmpresaTransID', empresaTransID)
             .input('FechaRegistro', fechaRegistro)
             .execute("Usp_API_RegistrosDiarioEmpresaRecuperar")
     }).then(result => {
-       
+        mssql.close()
         if (result.recordsets[1][0].success == 'true') {
             response.status(200).json({
                 message: result.recordsets[1][0].message,
@@ -260,16 +274,19 @@ router.post('/api/company/registries', securityRoute, (request, response) => {
 
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
+        mssql.close()
     })
 })
 
 //recuperar las clasificaciones
 router.get('/api/company/clasifications', securityRoute, (request, response) => {
+    mssql.close()
+
     new mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
             .execute("Usp_API_ClasificacionesRecuperar")
     }).then(result => {
-        
+        mssql.close()
         if (result.recordsets[1][0].success) {
             response.status(200).json({
                 response: result.recordsets[0]
@@ -278,6 +295,7 @@ router.get('/api/company/clasifications', securityRoute, (request, response) => 
 
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde. ' + error)
+        mssql.close()
     })
 
 })
@@ -291,7 +309,7 @@ router.get('/api/company/registry/:folioID', securityRoute, (request, response) 
             .input("FolioID", folioID)
             .execute("Usp_API_RegistroDiarioEmpresaRecuperar")
     }).then(result => {
-
+        mssql.close()
         if (result.recordsets[1][0].success) {
             response.status(200).json({
                 response: result.recordsets[0]
@@ -301,7 +319,7 @@ router.get('/api/company/registry/:folioID', securityRoute, (request, response) 
 
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
-        
+        mssql.close()
     })
 })
 
@@ -323,7 +341,7 @@ router.post('/api/company/registries/:EmpresaTransID', securityRoute, (request, 
             .input("FechaFin", finalDay)
             .execute("Usp_API_RegistrosDiarioPorParametrosEmpresaRecuperar")
     }).then(result => {
-
+        mssql.close()
         if (result.recordsets[2][0].success) {
 
             response.status(200).json({
@@ -336,6 +354,7 @@ router.post('/api/company/registries/:EmpresaTransID', securityRoute, (request, 
 
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + error)
+        mssql.close()
     })
 
 })
@@ -355,7 +374,7 @@ router.post('/api/company/subclasification', securityRoute, (request, response) 
             .input("EsActivo", isActived)
             .execute("Usp_API_SubClasificacionAgregar")
     }).then(result => {
-       
+        mssql.close()
         if (result.recordsets[0][0].success) {
 
             response.status(200).json({
@@ -367,6 +386,7 @@ router.post('/api/company/subclasification', securityRoute, (request, response) 
 
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + error)
+        mssql.close()
     })
 
 })
@@ -386,7 +406,7 @@ router.put('/api/company/subclasification', securityRoute, (request, response) =
             .input("ClasificacionID", clasificationID)
             .execute("Usp_API_SubClasificacionEditar")
     }).then(result => {
-
+        mssql.close()
         if (result.recordsets[0][0].success) {
 
             response.status(200).json({
@@ -398,6 +418,7 @@ router.put('/api/company/subclasification', securityRoute, (request, response) =
 
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + error)
+        mssql.close()
     })
 })
 
@@ -406,13 +427,14 @@ router.post('/api/company/subclasifications', securityRoute, (request, response)
     let companyTransID = request.body.EmpresaTransID
     let mostrarInactivos = request.body.mostrarInactivos
 
+    mssql.close()
     new mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
             .input("EmpresaTransID", companyTransID)
             .input("MostrarInactivos", mostrarInactivos)
             .execute("Usp_API_SubClasificacionRecuperar")
     }).then(result => {
-       
+        mssql.close()
         if (result.recordsets[1][0].success) {
             response.status(200).json({
                 success: result.recordsets[1][0].success,
@@ -423,6 +445,7 @@ router.post('/api/company/subclasifications', securityRoute, (request, response)
 
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
+        mssql.close()
     })
 
     
@@ -432,6 +455,7 @@ router.post('/api/company/subclasifications', securityRoute, (request, response)
 router.post('/api/company/collections', securityRoute, (request, response) => {
     let companyTransID = request.body.EmpresaTransID
     let typeofaccount = request.body.TipoCuentaID
+    mssql.close()
 
     new mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
@@ -439,7 +463,7 @@ router.post('/api/company/collections', securityRoute, (request, response) => {
             .input("TipoCuentaID", typeofaccount)
             .execute("Usp_API_CobranzaEmpresaRecuperar")
     }).then(result => {
-       
+        mssql.close()
         if (result.recordsets[1][0].success) {
             response.status(200).json({
                 success: result.recordsets[1][0].success,
@@ -450,6 +474,7 @@ router.post('/api/company/collections', securityRoute, (request, response) => {
 
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
+        mssql.close()
     })
     
 })
@@ -469,7 +494,7 @@ router.post('/api/company/collection/payment', securityRoute, (request, response
             .input("Total", total)
             .execute("Usp_API_PagoCobranzaAgregar")
     }).then(result => {
-       
+        mssql.close()
         if (result.recordsets[0][0].success) {
             response.status(200).json({
                 success: result.recordsets[0][0].success,
@@ -479,6 +504,7 @@ router.post('/api/company/collection/payment', securityRoute, (request, response
         }
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
+        mssql.close()
     })
 
     
@@ -491,7 +517,7 @@ router.get('/api/company/typeofaccount', (request, response) => {
         return new mssql.Request()
             .execute("Usp_API_TipoCuentaRecuperar")
     }).then(result => {
-
+        mssql.close()
         if (result.recordsets[1][0].success) {
             response.status(200).json({
                 success: result.recordsets[1][0].success,
@@ -502,6 +528,7 @@ router.get('/api/company/typeofaccount', (request, response) => {
 
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
+        mssql.close()
     })
 
 })
@@ -531,7 +558,7 @@ router.put('/api/company/openingbalances', securityRoute, (request, response) =>
             .input("CorreoUsuario", correoUsuario)
             .execute("Usp_API_SaldoInicialEmpresaActualizar")
     }).then(result => {
-     
+        mssql.close()
         if (result.recordsets[0][0].success) {
 
             response.status(200).json({
@@ -543,6 +570,7 @@ router.put('/api/company/openingbalances', securityRoute, (request, response) =>
 
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + error)
+        mssql.close()
     })
 })
 
@@ -555,7 +583,7 @@ router.get('/api/company/openingbalances/:EmpresaTransID', securityRoute, (reque
             .input("EmpresaTransID", companyTransID)
             .execute("Usp_API_SaldoInicialEmpresaRecuperar")
     }).then(result => {
-       
+        mssql.close()
         if (result.recordsets[1][0].success) {
 
             response.status(200).json({
@@ -567,6 +595,7 @@ router.get('/api/company/openingbalances/:EmpresaTransID', securityRoute, (reque
 
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + error)
+        mssql.close()
     })
 
 })
@@ -574,13 +603,14 @@ router.get('/api/company/openingbalances/:EmpresaTransID', securityRoute, (reque
 //recuperar numero de reportes para la descarga
 router.get('/api/company/reports/:EmpresaTransID', securityRoute, (request, response) => {
     let companyTransID = request.params.EmpresaTransID
-
+    
     new mssql.connect(sqlConnect.dbconnection()).then(() => {
+        
         return new mssql.Request()
             .input("EmpresaTransID", companyTransID)
             .execute("Usp_API_ReportesMesEmpresaRecuperar")
     }).then(result => {
-        
+        mssql.close()
         if (result.recordsets[1][0].success) {
 
             response.status(200).json({
@@ -592,7 +622,7 @@ router.get('/api/company/reports/:EmpresaTransID', securityRoute, (request, resp
        
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + error)
-        
+        mssql.close()
     })
 })
 
@@ -605,7 +635,7 @@ router.put('/api/company/reports', securityRoute, (request, response) => {
             .input("EmpresaTransID", companyTransID)
             .execute("Usp_API_ReportesMesEmpresaActualizar")
     }).then(result => {
-
+        mssql.close()
         if (result.recordsets[0][0].success) {
 
             response.status(200).json({
@@ -617,6 +647,7 @@ router.put('/api/company/reports', securityRoute, (request, response) => {
 
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + error)
+        mssql.close()
     })
 
     
@@ -626,13 +657,14 @@ router.put('/api/company/reports', securityRoute, (request, response) => {
 //obtener balance general de la empresa
 router.get('/api/company/balancegeneral/:EmpresaTransID', securityRoute, (request, response) => {
     let companyTransID = request.params.EmpresaTransID
+    mssql.close()
 
     new mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
             .input("EmpresaTransID", companyTransID)
             .execute("Usp_API_BalanceGeneralEmpresaRecuperar")
     }).then(result => {
-        
+        mssql.close()
         if (result.recordsets[1][0].success) {
 
             response.status(200).json({
@@ -644,6 +676,7 @@ router.get('/api/company/balancegeneral/:EmpresaTransID', securityRoute, (reques
 
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + error)
+        mssql.close()
     })
 
 })

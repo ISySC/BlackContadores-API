@@ -1,6 +1,6 @@
 exports.dbconnection = function ()
 {
-    var connect = 
+    const connect = 
     {
         server: 'lnxsrvzeus.eastus.cloudapp.azure.com',
         database : 'BLACKCONTADORES',
