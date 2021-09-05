@@ -22,37 +22,8 @@ router.post('/api/payment/', async (request, response) => {
     let EmpresaTransID = request.params.EmpresaTransID
     let EsNueva = false
 
-    conekta.api_key = 'key_THEXVyarQFRAkMmoLJbpGw';
+    conekta.api_key = 'key_HojpxSgy8KkZT8zCsufz2g';
     conekta.api_version = '2.0.0';
-
-    if(!CostumerID)
-    {
-        EsNueva = true;
-        //Creamos cliente en caso de ser un nuevo registro
-        conekta.Customer.create({
-            'name': Usuario,
-            'email': Email,
-            'metadata': { 'description': Usuario, 'reference': EmpresaTransID },
-            'payment_sources': [{
-                'type': 'card',
-                'token_id': Token
-            }]}, 
-            function (err, res) {
-                if(err)
-                {
-                    response.status(200).send({
-                        success: false,
-                        message: 'Existio un error al generar la solicitud de pago. Te hemos asignado 30 dias de una version gratuita para que puedas probar nuestro sistema.',
-                        response: err
-                    })
-
-                //Aqui generamos la cuenta gratuita por error
-
-                return;
-            }
-            CostumerID = res._json.id;
-        });
-    }
 
     //Generamos la orden de pago
     conekta.Order.create({
@@ -64,13 +35,16 @@ router.post('/api/payment/', async (request, response) => {
         }],
         "currency": "MXN",
         "customer_info": {
-            "customer_id": CostumerID
+            'name': Usuario,
+            'email': Email,
+            'phone': '+52181818181'
         },
         "metadata": { "description": 'Pago de Membresia '+ Membresia +' Contadores Black: '+ Precio +'(MXN)', "reference": EmpresaTransID },
         "charges":[
         {
             "payment_method": {
-                "type": "default"
+                "type": "card",
+                'token_id': Token
             }
         }]
     }, 
@@ -78,8 +52,6 @@ router.post('/api/payment/', async (request, response) => {
         if(err){
             if(EsNueva)
             {
-                //Aqui generamos la cuenta gratuita por error
-
                 response.status(200).send({
                     success: false,
                     message: 'Existio un error al generar la solicitud de pago. Te hemos asignado 30 dias de una version gratuita para que puedas probar nuestro sistema.',
@@ -97,7 +69,7 @@ router.post('/api/payment/', async (request, response) => {
             return;
         }
         response.status(200).send({
-                    success: false,
+                    success: true,
                     message: 'Pago registrado de manera exitosa.',
                     response: CostumerID
                 })
