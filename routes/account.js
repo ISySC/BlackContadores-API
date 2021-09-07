@@ -29,7 +29,7 @@ router.post('/api/user/createaccount', async (request, response) => {
     var salt = bcrypt.genSaltSync(saltRounds);
     var hash = bcrypt.hashSync(request.body.password, salt);
 
-    new mssql.connect(sqlConnect.dbconnection()).then(() => {
+    mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
             .input('NombreUsuario', legalNamePerson)
             .input('CorreoUsuario', email)
@@ -47,7 +47,7 @@ router.post('/api/user/createaccount', async (request, response) => {
 
             if (membershipID == 1)//membresia / plan gratuito
             {
-                new mssql.connect(sqlConnect.dbconnection()).then(() => {
+                mssql.connect(sqlConnect.dbconnection()).then(() => {
 
                     return new mssql.Request()
                         .input('EmpresaTransID', result.recordset[0].empresaTransID)
@@ -89,7 +89,7 @@ router.post('/api/user/login', async (request, response) => {
     let username = request.body.CorreoUsuario;
 
     //se valida el inicio de sesión  del usuario
-    new mssql.connect(sqlConnect.dbconnection()).then(() => {
+    mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
             .input('CorreoUsuario', username)
             .execute("Usp_API_IniciarSesionRecuperar")
@@ -157,7 +157,7 @@ router.post('/api/user/login', async (request, response) => {
 router.delete('/api/user/logout/:Token', securityRoute, async (request, response) => {
 
     let token = request.params.Token;
-    new mssql.connect(sqlConnect.dbconnection()).then(() => {
+    mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
             .input("Token", token)
             .execute("Usp_API_CerrarSesion")
@@ -183,7 +183,7 @@ router.delete('/api/user/logout/:Token', securityRoute, async (request, response
 router.post('/api/user/recoverypassword', async (request, response) => {
     let email = request.body.correousuario
 
-    new mssql.connect(sqlConnect.dbconnection()).then(() => {
+    mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
             .input('CorreoUsuario', email)
             .execute("Usp_API_ContrasenaUsuarioRecuperar")
@@ -199,7 +199,7 @@ router.post('/api/user/recoverypassword', async (request, response) => {
             stmp.sendEmailRecoveryPassword(result.recordsets[0][0].legalNamePerson, email, result.recordsets[0][0].contrasenaTemporal)
             mssql.close()
             //mandar el hash a la base de datos
-            new mssql.connect(sqlConnect.dbconnection()).then(() => {
+            mssql.connect(sqlConnect.dbconnection()).then(() => {
                 return new mssql.Request()
                     .input('Contrasena', hash)
                     .input('CorreoUsuario', email)
