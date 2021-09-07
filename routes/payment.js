@@ -87,10 +87,10 @@ router.post('/api/payment/', async (request, response) => {
                     response: result.recordsets[0]
                 })
             }
-            mssql.close()
+            
         }).catch(error => {
             response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + error)
-            mssql.close()
+            
         })
 
         /*response.status(200).send({

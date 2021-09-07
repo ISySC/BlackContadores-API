@@ -41,11 +41,11 @@ router.post('/api/profile/:EmpresaTransID', securityRoute, (request, response) =
             })  
         }
 
-        mssql.close()
+        
 
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
-        mssql.close()
+        
     })
 })
 
@@ -95,10 +95,10 @@ router.put('/api/profile/:EmpresaTransID', securityRoute, (request, response) =>
             })
         }
 
-        mssql.close()
+        
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
-        mssql.close()
+        
     })
 })
 
@@ -129,11 +129,11 @@ router.put('/api/profile/payment/:EmpresaTransID', securityRoute, (request, resp
                 response: result.recordsets[0]
             })
         }
-        mssql.close()
+        
          
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
-        mssql.close()
+        
     })
 })
 
