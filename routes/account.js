@@ -87,7 +87,7 @@ router.post('/api/user/login', async (request, response) => {
     let username = request.body.CorreoUsuario;
 
     //se valida el inicio de sesión  del usuario
-    new mssql.connect(sqlConnect.dbconnection()).then(() => {
+    mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
             .input('CorreoUsuario', username)
             .execute("Usp_API_IniciarSesionRecuperar")
