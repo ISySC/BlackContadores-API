@@ -4,6 +4,9 @@ var express = require('express')
 var router = express.Router()
 var bodyParser = require('body-parser')
 
+var mssql = require('mssql')
+var sqlConnect = require('../dbase/dbConfig')
+
 var conekta = require('conekta');
 
 router.use(bodyParser.urlencoded({ extended: false }))
@@ -19,8 +22,9 @@ router.post('/api/payment/', async (request, response) => {
     let Usuario = request.body.Usuario
     let Token = request.body.Token
     let CostumerID = request.body.CostumerID
-    let EmpresaTransID = request.params.EmpresaTransID
+    let EmpresaTransID = request.body.EmpresaTransID
     let EsNueva = false
+    let frecuency = request.body.Frecuencia
 
     conekta.api_key = 'key_HojpxSgy8KkZT8zCsufz2g';
     conekta.api_version = '2.0.0';
@@ -68,12 +72,32 @@ router.post('/api/payment/', async (request, response) => {
             }
             return;
         }
-        response.status(200).send({
-                    success: true,
-                    message: 'Pago registrado de manera exitosa.',
-                    response: CostumerID
+
+        new mssql.connect(sqlConnect.dbconnection()).then(() => {
+            return new mssql.Request()
+            .input('EmpresaTransID', EmpresaTransID)
+            .input('MembresiaID', MembresiaID)
+            .input('Periodo', frecuency)
+            .input('Pago', Precio)
+            .input('CorreoUsuario', Email)
+            .execute("Usp_API_MembresiaEmpresaEditar")
+        }).then(result => {
+            if (result.recordsets[0][0].success) {
+                response.status(200).json({
+                    response: result.recordsets[0]
                 })
-        return;
+            }
+
+        }).catch(error => {
+            response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + error)
+        })
+
+        /*response.status(200).send({
+            success: true,
+            message: 'Pago registrado de manera exitosa.',
+            response: CostumerID
+        })
+        return;*/
         // Si la orden fue exitosa aqui guardamos los datos del pago
         // res.toObject().id - ID de pago
         // res.toObject().charges.data[0].payment_method.auth_code - Codigo de autorización del pago
