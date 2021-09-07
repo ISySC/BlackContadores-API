@@ -19,7 +19,7 @@ router.post('/api/company/bankaccounts', securityRoute, (request, response) => {
 
     
 
-    new mssql.connect(sqlConnect.dbconnection()).then(() => {
+    mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
             .input('EmpresaTransID', companyTransID)
             .input('MostrarInactivos', showInactived)
@@ -293,7 +293,7 @@ router.post('/api/company/registries', securityRoute, (request, response) => {
 router.get('/api/company/clasifications', securityRoute, (request, response) => {
     
 
-    new mssql.connect(sqlConnect.dbconnection()).then(() => {
+    mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
             .execute("Usp_API_ClasificacionesRecuperar")
     }).then(result => {
@@ -439,7 +439,7 @@ router.post('/api/company/subclasifications', securityRoute, (request, response)
     let mostrarInactivos = request.body.mostrarInactivos
 
     
-    new mssql.connect(sqlConnect.dbconnection()).then(() => {
+    mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
             .input("EmpresaTransID", companyTransID)
             .input("MostrarInactivos", mostrarInactivos)
@@ -470,7 +470,7 @@ router.post('/api/company/collections', securityRoute, (request, response) => {
     let typeofaccount = request.body.TipoCuentaID
     
 
-    new mssql.connect(sqlConnect.dbconnection()).then(() => {
+    mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
             .input("EmpresaTransID", companyTransID)
             .input("TipoCuentaID", typeofaccount)
@@ -527,7 +527,7 @@ router.post('/api/company/collection/payment', securityRoute, (request, response
 //recupera los tipos de cuenta para ingresos (efectivo o banco)
 router.get('/api/company/typeofaccount', (request, response) => {
 
-    new mssql.connect(sqlConnect.dbconnection()).then(() => {
+    mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
             .execute("Usp_API_TipoCuentaRecuperar")
     }).then(result => {
@@ -618,7 +618,7 @@ router.get('/api/company/openingbalances/:EmpresaTransID', securityRoute, (reque
 router.get('/api/company/reports/:EmpresaTransID', securityRoute, (request, response) => {
     let companyTransID = request.params.EmpresaTransID
     
-    new mssql.connect(sqlConnect.dbconnection()).then(() => {
+    mssql.connect(sqlConnect.dbconnection()).then(() => {
         
         return new mssql.Request()
             .input("EmpresaTransID", companyTransID)
