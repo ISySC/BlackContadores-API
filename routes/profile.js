@@ -25,7 +25,7 @@ router.post('/api/profile/:EmpresaTransID', securityRoute, (request, response) =
             .input('UsuarioID', usuarioID)
             .execute("Usp_API_PerfilUsuarioRecuperar")
     }).then(result => {
-        mssql.close()
+       
         if (result.recordsets[5][0].success) {
             
             response.status(200).json({
@@ -38,10 +38,10 @@ router.post('/api/profile/:EmpresaTransID', securityRoute, (request, response) =
                     'subgiros': result.recordsets[3],
                     'actividades': result.recordsets[4]
                 }
-            })
-
-             
+            })  
         }
+
+        mssql.close()
 
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
@@ -88,14 +88,14 @@ router.put('/api/profile/:EmpresaTransID', securityRoute, (request, response) =>
             .input('CorreoUsuario', emailUser)
             .execute("Usp_API_PerfilUsuarioEditar")
     }).then(result => {
-        mssql.close()
+       
         if (result.recordsets[0][0].success) {
             response.status(200).json({
                 response: result.recordsets[0]
             })
         }
 
-         
+        mssql.close()
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
         mssql.close()
@@ -123,13 +123,13 @@ router.put('/api/profile/payment/:EmpresaTransID', securityRoute, (request, resp
             .input('CorreoUsuario', emailUser)
             .execute("Usp_API_MembresiaEmpresaEditar")
     }).then(result => {
-        mssql.close()
+        
         if (result.recordsets[0][0].success) {
             response.status(200).json({
                 response: result.recordsets[0]
             })
         }
-
+        mssql.close()
          
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
