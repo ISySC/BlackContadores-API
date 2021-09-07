@@ -290,6 +290,7 @@ router.post('/api/company/registries', securityRoute, (request, response) => {
 //recuperar las clasificaciones
 router.get('/api/company/clasifications', securityRoute, (request, response) => {
     
+    mssql.close()
 
     mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
