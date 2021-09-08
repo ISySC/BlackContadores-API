@@ -19,33 +19,34 @@ router.post('/api/profile/:EmpresaTransID', securityRoute, (request, response) =
 
     let usuarioID = request.body.UsuarioID
 
-    new mssql.connect(sqlConnect.dbconnection()).then(() => {
-        return new mssql.Request()
-            .input('EmpresaTransID', companyTransID)
-            .input('UsuarioID', usuarioID)
-            .execute("Usp_API_PerfilUsuarioRecuperar")
-    }).then(result => {
-       
-        if (result.recordsets[5][0].success) {
-            
-            response.status(200).json({
-                message: result.recordsets[5][0].message,
-                success: result.recordsets[5][0].success,
-                response: {
-                    'perfil': result.recordsets[0],
-                    'membresias': result.recordsets[1],
-                    'giros': result.recordsets[2],
-                    'subgiros': result.recordsets[3],
-                    'actividades': result.recordsets[4]
-                }
-            })  
-        }
+    return new Promise((resolve, reject) => {
 
-        
+        new mssql.ConnectionPool(sqlConnect.dbconnection()).connect().then(pool => {
+            return pool.request()
+                .input('EmpresaTransID', companyTransID)
+                .input('UsuarioID', usuarioID)
+                .execute("Usp_API_PerfilUsuarioRecuperar")
+        }).then(result => {
 
-    }).catch(error => {
-        response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
-        
+            if (result.recordsets[5][0].success) {
+
+                response.status(200).json({
+                    message: result.recordsets[5][0].message,
+                    success: result.recordsets[5][0].success,
+                    response: {
+                        'perfil': result.recordsets[0],
+                        'membresias': result.recordsets[1],
+                        'giros': result.recordsets[2],
+                        'subgiros': result.recordsets[3],
+                        'actividades': result.recordsets[4]
+                    }
+                })
+            }
+
+        }).catch(error => {
+            response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
+
+        })
     })
 })
 
@@ -65,7 +66,7 @@ router.put('/api/profile/:EmpresaTransID', securityRoute, (request, response) =>
 
     var password = ""
 
-    if(isChangedPassword){
+    if (isChangedPassword) {
         //Encriptacion de la contraseña
         const saltRounds = 10;
         var salt = bcrypt.genSaltSync(saltRounds);
@@ -88,17 +89,17 @@ router.put('/api/profile/:EmpresaTransID', securityRoute, (request, response) =>
             .input('CorreoUsuario', emailUser)
             .execute("Usp_API_PerfilUsuarioEditar")
     }).then(result => {
-       
+
         if (result.recordsets[0][0].success) {
             response.status(200).json({
                 response: result.recordsets[0]
             })
         }
 
-        
+
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
-        
+
     })
 })
 
@@ -106,11 +107,11 @@ router.put('/api/profile/:EmpresaTransID', securityRoute, (request, response) =>
 router.put('/api/profile/payment/:EmpresaTransID', securityRoute, (request, response) => {
 
     //Periodo = 'Me' (Mensual)
-    
+
     let companyTransID = request.params.EmpresaTransID
 
     let membershipID = request.body.MembresiaID
-    let frecuency = request.body.Periodo  
+    let frecuency = request.body.Periodo
     let payment = request.body.Pago
     let emailUser = request.body.CorreoUsuario
 
@@ -123,17 +124,17 @@ router.put('/api/profile/payment/:EmpresaTransID', securityRoute, (request, resp
             .input('CorreoUsuario', emailUser)
             .execute("Usp_API_MembresiaEmpresaEditar")
     }).then(result => {
-        
+
         if (result.recordsets[0][0].success) {
             response.status(200).json({
                 response: result.recordsets[0]
             })
         }
-        
-         
+
+
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
-        
+
     })
 })
 
