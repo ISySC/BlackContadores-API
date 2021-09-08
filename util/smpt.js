@@ -117,4 +117,42 @@ function sendEmailRecoveryPassword(nombre, correo, contrasena){
 
 }
 
-module.exports = {sendEmailAccount, sendEmailMembership, sendEmailRecoveryPassword}
+function sendEmailPayment(fechaVencimiento, tipoPlan, fechaActivacion, periocidad, costo, correo, nombre){
+    
+  var transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'administracion@contadoresblack.com',
+        pass: 'blackadmon.1234'
+      }});
+      
+      var mailoptions =  {
+        from: 'Administración Black <administracion@contadoresblack.com>',
+        to: correo,
+        subject: 'Administración Black | Plan ' + tipoPlan + ' ',
+        html: '<span style="font-family: Helvetica;font-size: 14px">Buen día <b>' + nombre  + '</b></span>' + 
+              '<br><br><span style="font-family: Helvetica;font-size: 14px"><b>Black Administrativo</b> agredece su preferencia; a continuación enviamos información de su renovación de plan seccionado </span>' + 
+              '<br><br><span style="font-family: Helvetica;font-size: 14px">ESTA ES SU INFORMACIÓN:</span>' +
+              '<br><span style="font-family: Helvetica;font-size: 14px">Plan: <b>' + tipoPlan + '</b></span>' +
+              '<br><span style="font-family: Helvetica;font-size: 14px">Periocidad: <b>' + periocidad + '</b></span>' +
+              '<br><span style="font-family: Helvetica;font-size: 14px">Costo: <b>' + costo + '</b></span>' +
+              '<br><span style="font-family: Helvetica;font-size: 14px">Fecha de activación: <b>' + fechaActivacion + '</b></span>' +
+              '<br><span style="font-family: Helvetica;font-size: 14px">Fecha de vencimiento: <b>' + fechaVencimiento + '</b></span>' +
+              '<br><br><br><span style="font-family: Helvetica;font-size: 14px">Derechos reservados <span>&#169;</span> 2021. Black Administrativo, una solución de <a href="http://contadoresblack.com/" target="_blank">Black Contadores.</a></span>'
+      };
+
+    transporter.sendMail(mailoptions, (error) => {
+      if(error) {
+          let errorMail = {
+              status: false,
+              message: 'Ocurrio un error al intentar enviar el correo electrónico. Favor de intentar más tarde',
+              response: error
+          }
+      }
+      else
+        console.log("Envió satisfactorio")
+  });
+
+}
+
+module.exports = {sendEmailAccount, sendEmailMembership, sendEmailRecoveryPassword, sendEmailPayment}

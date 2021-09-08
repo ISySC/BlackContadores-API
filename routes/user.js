@@ -17,23 +17,26 @@ router.use(bodyParser.json())
 router.get('/api/users/:EmpresaTransID', securityRoute, (request, response) => {
     let companyTransID = request.params.EmpresaTransID
 
-    new mssql.connect(sqlConnect.dbconnection()).then(() => {
-        return new mssql.Request()
-            .input('EmpresaTransID', companyTransID)
-            .execute("Usp_API_UsuariosEmpresaRecuperar")
-    }).then(result => {
-        
-        response.status(200).json({
-            success: 'true',
-            message: 'Usuarios de la empresa recuperados exitosamente',
-            response: result.recordsets[0]
+    return new Promise((resolve, reject) => {
+
+        new mssql.ConnectionPool(sqlConnect.dbconnection()).connect().then(pool => {
+            return pool.request()
+                .input('EmpresaTransID', companyTransID)
+                .execute("Usp_API_UsuariosEmpresaRecuperar")
+        }).then(result => {
+
+            response.status(200).json({
+                success: 'true',
+                message: 'Usuarios de la empresa recuperados exitosamente',
+                response: result.recordsets[0]
+            })
+
+
+
+        }).catch(error => {
+            response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
+
         })
-
-        
-
-    }).catch(error => {
-        response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
-        
     })
 })
 
@@ -41,23 +44,26 @@ router.get('/api/users/:EmpresaTransID', securityRoute, (request, response) => {
 router.get('/api/users/user/:UsuarioID', securityRoute, (request, response) => {
     let userID = request.params.UsuarioID
 
-    new mssql.connect(sqlConnect.dbconnection()).then(() => {
-        return new mssql.Request()
-            .input('UsuarioID', userID)
-            .execute("Usp_API_UsuarioEmpresaRecuperar")
-    }).then(result => {
-        
-        response.status(200).json({
-            success: 'true',
-            message: 'Información del usuario obtenida correctamente',
-            response: result.recordsets[0]
+    return new Promise((resolve, reject) => {
+
+        new mssql.ConnectionPool(sqlConnect.dbconnection()).connect().then(pool => {
+            return pool.request()
+                .input('UsuarioID', userID)
+                .execute("Usp_API_UsuarioEmpresaRecuperar")
+        }).then(result => {
+
+            response.status(200).json({
+                success: 'true',
+                message: 'Información del usuario obtenida correctamente',
+                response: result.recordsets[0]
+            })
+
+
+
+        }).catch(error => {
+            response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
+
         })
-
-        
-
-    }).catch(error => {
-        response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
-        
     })
 })
 
@@ -72,24 +78,27 @@ router.post('/api/users/user/add', securityRoute, (request, response) => {
     var salt = bcrypt.genSaltSync(saltRounds);
     var password = bcrypt.hashSync(request.body.Contrasena, salt);
 
-    new mssql.connect(sqlConnect.dbconnection()).then(() => {
-        return new mssql.Request()
-            .input('EmpresaTransID', companyTransID)
-            .input('NombreUsuario', username)
-            .input('CorreoUsuario', email)
-            .input('Contrasena', password)
-            .execute("Usp_API_UsuarioEmpresaDisponibleAgregar")
-    }).then(result => {
-        
-        response.status(200).json({
-            success: result.recordsets[0][0].success,
-            message: result.recordsets[0][0].message,
-            response: []
+    return new Promise((resolve, reject) => {
+
+        new mssql.ConnectionPool(sqlConnect.dbconnection()).connect().then(pool => {
+            return pool.request()
+                .input('EmpresaTransID', companyTransID)
+                .input('NombreUsuario', username)
+                .input('CorreoUsuario', email)
+                .input('Contrasena', password)
+                .execute("Usp_API_UsuarioEmpresaDisponibleAgregar")
+        }).then(result => {
+
+            response.status(200).json({
+                success: result.recordsets[0][0].success,
+                message: result.recordsets[0][0].message,
+                response: []
+            })
+
+        }).catch(error => {
+            response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
+
         })
-        
-    }).catch(error => {
-        response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
-        
     })
 })
 
@@ -105,25 +114,28 @@ router.put('/api/users/user/:UsuarioID', securityRoute, (request, response) => {
     var salt = bcrypt.genSaltSync(saltRounds);
     var password = bcrypt.hashSync(request.body.Contrasena, salt);
 
-    new mssql.connect(sqlConnect.dbconnection()).then(() => {
-        return new mssql.Request()
-            .input('UsuarioID', userID)
-            .input('NombreUsuario', username)
-            .input('Contrasena', password)
-            .input('EsActivo', isActived)
-            .execute("Usp_API_UsuarioEmpresaDisponibleEditar")
-    }).then(result => {
-        
-        response.status(200).json({
-            success: result.recordsets[0][0].success,
-            message: result.recordsets[0][0].message,
-            response: []
+    return new Promise((resolve, reject) => {
+
+        new mssql.ConnectionPool(sqlConnect.dbconnection()).connect().then(pool => {
+            return pool.request()
+                .input('UsuarioID', userID)
+                .input('NombreUsuario', username)
+                .input('Contrasena', password)
+                .input('EsActivo', isActived)
+                .execute("Usp_API_UsuarioEmpresaDisponibleEditar")
+        }).then(result => {
+
+            response.status(200).json({
+                success: result.recordsets[0][0].success,
+                message: result.recordsets[0][0].message,
+                response: []
+            })
+
+
+        }).catch(error => {
+            response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
+
         })
-                
-        
-    }).catch(error => {
-        response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
-        
     })
 })
 

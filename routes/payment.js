@@ -8,6 +8,7 @@ var mssql = require('mssql')
 var sqlConnect = require('../dbase/dbConfig')
 
 var conekta = require('conekta');
+var stmp = require("../util/smpt")
 
 router.use(bodyParser.urlencoded({ extended: false }))
 router.use(bodyParser.json())
@@ -82,10 +83,17 @@ router.post('/api/payment/', async (request, response) => {
             .input('CorreoUsuario', Email)
             .execute("Usp_API_MembresiaEmpresaEditar")
         }).then(result => {
-            if (result.recordsets[0][0].success) {
+            if (result.recordsets[1][0].success) {
+
                 response.status(200).json({
-                    response: result.recordsets[0]
+                    success: result.recordsets[1][0].success,
+                    message: result.recordsets[1][0].message,
+                    response: []
                 })
+
+                console.log(result.recordsets[0][0])
+
+                stmp.sendEmailPayment(result.recordsets[0][0].fechaVencimiento, result.recordsets[0][0].tipoPlan, result.recordsets[0][0].fechaActivacion, frecuency, Precio, Email, result.recordsets[0][0].NombreUsuario)
             }
             
         }).catch(error => {
