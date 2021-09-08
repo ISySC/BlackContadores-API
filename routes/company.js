@@ -498,8 +498,6 @@ router.post('/api/company/collection/payment', securityRoute, (request, response
     let total = request.body.Total
     let typeofaccuntpay = request.body.TipoPagoCuentaID
 
-    console.log(TipoPagoCuentaID)
-
     mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
             .input("CxCID", isCxC)
