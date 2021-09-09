@@ -111,6 +111,33 @@ router.put('/api/company/bankaccounts/:CuentaID', securityRoute, (request, respo
 
 })
 
+//eliminar una cuenta de la empresa
+router.delete('/api/company/bankaccount', securityRoute, (request, response) => {
+    let accountID = request.body.CuentaID
+    let companyTransID = request.body.EmpresaTransID
+
+    mssql.connect(sqlConnect.dbconnection()).then(() => {
+        return new mssql.Request()
+            .input("CuentaID", accountID)
+            .input("EmpresaTransID", companyTransID)
+            .execute("Usp_API_CuentaEmpresaEliminar")
+    }).then(result => {
+
+        if (result.recordsets[0][0].success) {
+
+            response.status(200).json({
+                success: result.recordsets[0][0].success,
+                message: result.recordsets[0][0].message,
+                response: null
+            })
+        }
+        mssql.close()
+    }).catch(error => {
+        response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + error)
+        mssql.close()
+    })
+})
+
 //recuperar la información de una cuenta
 router.get('/api/company/bankaccount/:CuentaID', securityRoute, (request, response) => {
     let bankaccount = request.params.CuentaID
@@ -420,6 +447,33 @@ router.put('/api/company/subclasification', securityRoute, (request, response) =
             .input("EsActivo", isActived)
             .input("ClasificacionID", clasificationID)
             .execute("Usp_API_SubClasificacionEditar")
+    }).then(result => {
+
+        if (result.recordsets[0][0].success) {
+
+            response.status(200).json({
+                success: result.recordsets[0][0].success,
+                message: result.recordsets[0][0].message,
+                response: null
+            })
+        }
+        mssql.close()
+    }).catch(error => {
+        response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + error)
+        mssql.close()
+    })
+})
+
+//eliminar una subclasificacion de la empresa
+router.delete('/api/company/subclasification', securityRoute, (request, response) => {
+    let subclasificacionID = request.body.SubClasificacionID
+    let companyTransID = request.body.EmpresaTransID
+
+    mssql.connect(sqlConnect.dbconnection()).then(() => {
+        return new mssql.Request()
+            .input("SubclasificacionID", subclasificacionID)
+            .input("EmpresaTransID", companyTransID)
+            .execute("Usp_API_SubclasificacionEmpresaEliminar")
     }).then(result => {
 
         if (result.recordsets[0][0].success) {
