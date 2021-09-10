@@ -776,6 +776,7 @@ router.get('/api/company/percentagecompletion/:EmpresaTransID', securityRoute, (
                 response.status(200).json({
                     success: result.recordsets[0][0].success,
                     message: result.recordsets[0][0].message,
+                    perce: result.recordsets[0][0].PorcentajeAvance,
                     response: null
                 })
             }
