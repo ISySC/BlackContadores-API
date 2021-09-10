@@ -759,6 +759,34 @@ router.get('/api/company/balancegeneral/:EmpresaTransID', securityRoute, (reques
     })
 })
 
+//recuperar porcentaje de avance del perfil
+router.get('/api/company/percentagecompletion/:EmpresaTransID', securityRoute, (request, response) => {
+    let companyTransID = request.params.EmpresaTransID
+
+    return new Promise((resolve, reject) => {
+
+        new mssql.ConnectionPool(sqlConnect.dbconnection()).connect().then(pool => {
+            return pool.request()
+                .input("EmpresaTransID", companyTransID)
+                .execute("Usp_API_PorcentajeAvanceEmpresa")
+        }).then(result => {
+
+            if (result.recordsets[0][0].success) {
+
+                response.status(200).json({
+                    success: result.recordsets[0][0].success,
+                    message: result.recordsets[0][0].message,
+                    response: null
+                })
+            }
+            mssql.close()
+        }).catch(error => {
+            response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + error)
+            mssql.close()
+        })
+    })
+})
+
 module.exports = router
 
 
