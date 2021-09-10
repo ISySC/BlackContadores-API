@@ -291,14 +291,16 @@ router.put('/api/company/deleteregistry', securityRoute, (request, response) => 
 // recuperar los registros diarios de una empresa
 router.post('/api/company/registries', securityRoute, (request, response) => {
     let empresaTransID = request.body.EmpresaTransID
-    let fechaRegistro = request.body.FechaRegistro
+    let FechaInicio = request.body.FechaInicio
+    let FechaFin = request.body.FechaFin
 
     return new Promise((resolve, reject) => {
 
         new mssql.ConnectionPool(sqlConnect.dbconnection()).connect().then(pool => {
             return pool.request()
                 .input('EmpresaTransID', empresaTransID)
-                .input('FechaRegistro', fechaRegistro)
+                .input('FechaInicio', FechaInicio)
+                .input('FechaFin', FechaFin)
                 .execute("Usp_API_RegistrosDiarioEmpresaRecuperar")
         }).then(result => {
 
