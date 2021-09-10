@@ -112,9 +112,9 @@ router.put('/api/company/bankaccounts/:CuentaID', securityRoute, (request, respo
 })
 
 //eliminar una cuenta de la empresa
-router.delete('/api/company/bankaccount', securityRoute, (request, response) => {
-    let accountID = request.body.CuentaID
-    let companyTransID = request.body.EmpresaTransID
+router.delete('/api/company/bankaccount/:EmpresaTransID/:CuentaID', securityRoute, (request, response) => {
+    let accountID = request.params.CuentaID
+    let companyTransID = request.params.EmpresaTransID
 
     mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
@@ -465,9 +465,9 @@ router.put('/api/company/subclasification', securityRoute, (request, response) =
 })
 
 //eliminar una subclasificacion de la empresa
-router.delete('/api/company/subclasification', securityRoute, (request, response) => {
-    let subclasificacionID = request.body.SubClasificacionID
-    let companyTransID = request.body.EmpresaTransID
+router.delete('/api/company/subclasification/:EmpresaTransID/:SubClasificacionID', securityRoute, (request, response) => {
+    let subclasificacionID = request.params.SubClasificacionID
+    let companyTransID = request.params.EmpresaTransID
 
     mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
