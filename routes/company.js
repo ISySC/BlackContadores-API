@@ -557,6 +557,7 @@ router.post('/api/company/collection/payment', securityRoute, (request, response
     let createBy = request.body.CreadoPor
     let total = request.body.Total
     let typeofaccuntpay = request.body.TipoPagoCuentaID
+    let folioID = request.body.RegistroID
 
     mssql.connect(sqlConnect.dbconnection()).then(() => {
         return new mssql.Request()
@@ -565,6 +566,7 @@ router.post('/api/company/collection/payment', securityRoute, (request, response
             .input("CreadoPor", createBy)
             .input("Total", total)
             .input("TipoPagoCuentaID", typeofaccuntpay)
+            .input("RegistroID", folioID)
             .execute("Usp_API_PagoCobranzaAgregar")
     }).then(result => {
 
