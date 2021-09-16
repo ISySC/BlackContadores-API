@@ -184,6 +184,7 @@ router.post('/api/company/addregistry', securityRoute, (request, response) => {
     let importe = request.body.importe
     let CreadoPor = request.body.CreadoPor
     let isCxC = request.body.EsCxC
+    let isCollectionInit = request.body.EsCobranzaInicial
 
     return new Promise((resolve, reject) => {
 
@@ -201,6 +202,7 @@ router.post('/api/company/addregistry', securityRoute, (request, response) => {
                 .input('Observaciones', observaciones)
                 .input('Importe', importe)
                 .input('CreadoPor', CreadoPor)
+                .input('EsCobranzaInicial', isCollectionInit )
                 .execute("Usp_API_RegistroDiarioAgregar")
         }).then(result => {
 
@@ -647,6 +649,31 @@ router.put('/api/company/openingbalances', securityRoute, (request, response) =>
     }).catch(error => {
         response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + error)
         mssql.close()
+    })
+})
+
+//recuperar cobranza inicial
+router.get('/api/company/openingbalance/collection/:EmpresaTransID', securityRoute, (request, response) => {
+    let companyTransID = request.params.EmpresaTransID
+
+    return new Promise((resolve, reject) => {   
+
+        new mssql.ConnectionPool(sqlConnect.dbconnection()).connect().then(pool => {
+            return pool.request()
+            .input('EmpresaTransID', companyTransID)
+            .execute("Usp_API_CobranzaSaldosInicialesRecuperar")
+        }).then(result => {
+
+            if (result.recordsets[0][0].success) {
+                response.status(200).json({
+                    response: result.recordsets[0]
+                })
+            }
+
+        }).catch(error => {
+            response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde. ' + error)
+            mssql.close()
+        })
     })
 })
 

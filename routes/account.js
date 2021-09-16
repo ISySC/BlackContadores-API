@@ -23,6 +23,7 @@ router.post('/api/user/createaccount', async (request, response) => {
     let membershipID = request.body.membershipID
     let frecuency = request.body.frecuency
     let phone = request.body.Telefono
+    let yearInit = request.body.AnioOperacion
 
     //Encriptacion de la contraseña
     const saltRounds = 10;
@@ -38,6 +39,7 @@ router.post('/api/user/createaccount', async (request, response) => {
             .input('MembresiaID', membershipID)
             .input('Periodo', frecuency)
             .input('Telefono', phone)
+            .input('AnioOperacion', yearInit)
             .execute("Usp_API_UsuarioRegistroAgregar")
     }).then(result => {
         if (result.recordset[0].success == 'true') {
