@@ -295,7 +295,8 @@ router.post('/api/company/registries', securityRoute, (request, response) => {
     let empresaTransID = request.body.EmpresaTransID
     let FechaInicio = request.body.FechaInicio
     let FechaFin = request.body.FechaFin
-
+    let accountID = request.body.CuentaID 
+    
     return new Promise((resolve, reject) => {
 
         new mssql.ConnectionPool(sqlConnect.dbconnection()).connect().then(pool => {
@@ -303,6 +304,7 @@ router.post('/api/company/registries', securityRoute, (request, response) => {
                 .input('EmpresaTransID', empresaTransID)
                 .input('FechaInicio', FechaInicio)
                 .input('FechaFin', FechaFin)
+                .input('CuentaID', accountID)
                 .execute("Usp_API_RegistrosDiarioEmpresaRecuperar")
         }).then(result => {
 
