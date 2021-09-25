@@ -296,7 +296,7 @@ router.post('/api/company/registries', securityRoute, (request, response) => {
     let FechaInicio = request.body.FechaInicio
     let FechaFin = request.body.FechaFin
     let accountID = request.body.CuentaID 
-    
+
     return new Promise((resolve, reject) => {
 
         new mssql.ConnectionPool(sqlConnect.dbconnection()).connect().then(pool => {
@@ -819,6 +819,96 @@ router.get('/api/company/percentagecompletion/:EmpresaTransID', securityRoute, (
             mssql.close()
         })
     })
+})
+
+//elimina un registro de cobranza de saldos iniciales
+router.get('/api/company/initcxc/:EmpresaTransID/:EsCxC', securityRoute, (request, response) => {
+    let companyTransID = request.params.EmpresaTransID
+    let isCxC = request.params.EsCxC
+
+    return new Promise((resolve, reject) => {
+
+        new mssql.ConnectionPool(sqlConnect.dbconnection()).connect().then(pool => {
+            return pool.request()
+                .input("EmpresaTransID", companyTransID)
+                .input("EsCxC", isCxC)
+                .execute("Usp_API_CxCSaldoInicialEmpresaRecuperar")
+        }).then(result => {
+
+            if (result.recordsets[1][0].success) {
+
+                response.status(200).json({
+                    success: result.recordsets[1][0].success,
+                    message: result.recordsets[1][0].message,
+                    response: result.recordsets[0]
+                })
+
+            }
+            mssql.close()
+        }).catch(error => {
+            response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + error)
+            mssql.close()
+        })
+    })
+})
+
+//recuperar la cobranza de cuentas por pagar de la empresa de saldos iniciales
+router.delete('/api/company/initcxc/:RegistroID', securityRoute, (request, response) => {
+    let registryID = request.params.RegistroID
+
+    return new Promise((resolve, reject) => {
+
+        new mssql.ConnectionPool(sqlConnect.dbconnection()).connect().then(pool => {
+            return pool.request()
+                .input("RegistroID", registryID)
+                .execute("Usp_API_CxCSaldoInicialEmpresaEliminar")
+        }).then(result => {
+
+            if (result.recordsets[0][0].success) {
+
+                response.status(200).json({
+                    success: result.recordsets[0][0].success,
+                    message: result.recordsets[0][0].message,
+                    response: []
+                })
+                
+            }
+            mssql.close()
+        }).catch(error => {
+            response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + error)
+            mssql.close()
+        })
+    })
+})
+
+//actualizar la cxc o cxp de saldos iniciales
+router.put('/api/company/initcxc/:RegistroID/:Total', securityRoute, (request, response) => {
+    let registryID = request.params.RegistroID
+    let total = request.params.Total
+
+    new mssql.connect(sqlConnect.dbconnection()).then(() => {
+        return new mssql.Request()
+            .input("RegistroID", registryID)
+            .input("Total",total)
+            .execute("Usp_API_CxCSaldoInicialEmpresaEditar")
+    }).then(result => {
+
+        if (result.recordsets[0][0].success) {
+
+            response.status(200).json({
+                success: result.recordsets[0][0].success,
+                message: result.recordsets[0][0].message,
+                response: []
+            })
+        }
+        mssql.close()
+    }).catch(error => {
+        response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.' + error)
+        mssql.close()
+    })
+
+
+
 })
 
 module.exports = router
