@@ -64,6 +64,7 @@ router.put('/api/profile/:EmpresaTransID', securityRoute, (request, response) =>
     let emailUser = request.body.CorreoUsuario
     let isChangedPassword = request.body.EsCambiarContrasena
     let otherActivity = request.body.OtraActividad
+    let anioOperacion = request.body.AnioOperacion
 
     var password = ""
 
@@ -89,6 +90,7 @@ router.put('/api/profile/:EmpresaTransID', securityRoute, (request, response) =>
             .input('OtroGiroEmpresa', otroGiro)
             .input('CorreoUsuario', emailUser)
             .input('OtraActividad', otherActivity)
+            .input('AnioOperacion', anioOperacion)
             .execute("Usp_API_PerfilUsuarioEditar")
     }).then(result => {
 
