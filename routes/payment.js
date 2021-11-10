@@ -27,7 +27,7 @@ router.post('/api/payment/', async (request, response) => {
     let EsNueva = false
     let frecuency = request.body.Frecuencia
 
-    conekta.api_key = 'key_HojpxSgy8KkZT8zCsufz2g';
+    conekta.api_key = 'key_k3BUXdVMJjR2QbiPZux9ow';
     conekta.api_version = '2.0.0';
 
     //Generamos la orden de pago
