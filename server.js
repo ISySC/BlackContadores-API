@@ -1,7 +1,8 @@
 'use strict'
 
 const express = require('express');
-
+const fs = require('fs');
+const https = require('https');
 const app = express();
 const port = process.env.PORT || 3001;
 
@@ -27,8 +28,12 @@ app.use(profile)
 app.use(user)
 app.use(payment)
 
+const privateKey = fs.readFileSync( '/etc/letsencrypt/live/www.blacksystem.mx/privkey.pem' );
+const certificate = fs.readFileSync( '/etc/letsencrypt/live/www.blacksystem.mx/fullchain.pem' );
 
-var server = app.listen(port, function () {
-    console.log('Server running on port:', port)
-})
+https.createServer({
+	    key: privateKey,
+	    cert: certificate
+}, app).listen(port);
+
 
