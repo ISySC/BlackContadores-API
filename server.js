@@ -28,17 +28,6 @@ app.use(profile)
 app.use(user)
 app.use(payment)
 
-<<<<<<< HEAD
-const privateKey = fs.readFileSync( '/etc/letsencrypt/live/www.blacksystem.mx/privkey.pem' );
-const certificate = fs.readFileSync( '/etc/letsencrypt/live/www.blacksystem.mx/fullchain.pem' );
-
-https.createServer({
-	    key: privateKey,
-	    cert: certificate
-}, app).listen(port);
-
-
-=======
 //configuración para SSL 
 const privateKey = fs.readFileSync( '/etc/letsencrypt/live/www.blacksystem.mx/privkey.pem' );
 const certificate = fs.readFileSync( '/etc/letsencrypt/live/www.blacksystem.mx/fullchain.pem' );
@@ -47,4 +36,3 @@ https.createServer({
             key: privateKey,
             cert: certificate
 }, app).listen(port);
->>>>>>> 0614114c9e77495995212615d658c848c7cf1c03
