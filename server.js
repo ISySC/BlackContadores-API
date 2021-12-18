@@ -28,6 +28,7 @@ app.use(profile)
 app.use(user)
 app.use(payment)
 
+//configuración para SSL 
 const privateKey = fs.readFileSync( '/etc/letsencrypt/live/www.blacksystem.mx/privkey.pem' );
 const certificate = fs.readFileSync( '/etc/letsencrypt/live/www.blacksystem.mx/fullchain.pem' );
 
