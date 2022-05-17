@@ -43,7 +43,7 @@ router.post('/api/user/createaccount', async (request, response) => {
         }).then(result => {
               if (result.recordsets[0][0].success) {
 
-                conekta.api_key = 'key_HojpxSgy8KkZT8zCsufz2g';
+                conekta.api_key = 'key_k3BUXdVMJjR2QbiPZux9ow';
                 conekta.api_version = '2.0.0';
 
                 //Generamos la orden de pago
