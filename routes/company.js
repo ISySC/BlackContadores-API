@@ -555,6 +555,38 @@ router.post('/api/company/collections', securityRoute, (request, response) => {
 })
 
 //Cobranza recuperar por empresa
+router.post('/api/company/collections/bydate', securityRoute, (request, response) => {
+    let companyTransID = request.body.EmpresaTransID
+    let typeofaccount = request.body.TipoCuentaID
+    let initDay = request.body.FechaInicio
+    let finalDay = request.body.FechaFin
+
+
+    return new Promise((resolve, reject) => {
+
+        new mssql.ConnectionPool(sqlConnect.dbconnection()).connect().then(pool => {
+            return pool.request()
+                .input("EmpresaTransID", companyTransID)
+                .input("TipoCuentaID", typeofaccount)
+                .input("FechaInicio", initDay)
+                .input("FechaFin", finalDay)
+                .execute("Usp_API_CobranzaPorFechaEmpresaRecuperar")
+        }).then(result => {
+            if (result.recordsets[1][0].success) {
+                response.status(200).json({
+                    success: result.recordsets[1][0].success,
+                    message: result.recordsets[1][0].message,
+                    response: result.recordsets[0]
+                })
+            }
+
+        }).catch(error => {
+            response.status(500).send('Ocurrio un error al intentar conectarse con el servicio. Intente mas tarde.')
+        })
+    })
+})
+
+//Cobranza recuperar por empresa
 router.post('/api/company/collection/payment', securityRoute, (request, response) => {
     let isCxC = request.body.EsCxC
     let amount = request.body.Abono
