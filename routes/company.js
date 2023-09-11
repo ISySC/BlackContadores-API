@@ -179,6 +179,7 @@ router.post('/api/company/addregistry', securityRoute, (request, response) => {
     let clasificacionID = request.body.clasificacionID
     let subclasificacionID = request.body.subclasificacionID
     let cuentaID = request.body.cuentaID
+    let subcuentaID = request.body.subcuentaID
     let typeofaccuntpay = request.body.tipoPagoCuenta
     let observaciones = request.body.observaciones
     let importe = request.body.importe
@@ -197,6 +198,7 @@ router.post('/api/company/addregistry', securityRoute, (request, response) => {
                 .input('ClasificacionID', clasificacionID)
                 .input('SubClasificacionID', subclasificacionID)
                 .input('CuentaID', cuentaID)
+                .input("SubCuentaID", subcuentaID)
                 .input('TipoPagoCuenta', typeofaccuntpay)
                 .input('EsCxC', isCxC)
                 .input('Observaciones', observaciones)
