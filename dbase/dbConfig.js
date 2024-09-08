@@ -2,7 +2,7 @@ exports.dbconnection = function ()
 {
     const connect = 
     {
-        server: 'lnxsrvdb.eastus2.cloudapp.azure.com',
+        server: '82.197.95.95',
         database : 'BLACKCONTADORES',
         user: 'black_user',
         password: 'bl4ckc0nt4d0r35.',
